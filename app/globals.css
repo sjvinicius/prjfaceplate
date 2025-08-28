@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #4292ED;
+  --secondary: #575757;
+  --tertiary: #ED4242;
 }
 
 @theme inline {
@@ -23,4 +26,53 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.aside-block {
+  flex: 2;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: flex 0.3s ease;
+  clip-path: polygon(0 50px, 100% 0, 100% calc(100% - 50px), 0% 100%);
+}
+
+.aside-block+.aside-block {
+  margin-top: -50px;
+}
+
+.aside-hover {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: white;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.aside-block:not(.black):hover {
+  flex: 3;
+  z-index: 10;
+}
+
+.aside-block:not(.black):hover .aside-hover {
+  opacity: 1;
+}
+
+.clip-path-bottom {
+  clip-path: polygon(0 0px, 100% 0, 100% calc(100% - 50px), 0% 100%);
+}
+
+.clip-path-top {
+  clip-path: polygon(0 50px, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* bloco preto maior */
+.aside-block.black {
+  height: 50vh;
+  flex: 1;
 }

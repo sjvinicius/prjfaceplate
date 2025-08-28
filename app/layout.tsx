@@ -19,15 +19,44 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params
 }: Readonly<{
   children: React.ReactNode;
+  params?: { slug?: string[] };
 }>) {
+
+  const pathname = "/" + (params?.slug?.join("/") ?? "");
+  const asideWidth = pathname === "/" || pathname === "/login" ? "w-10" : "w-16";
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="flex-1">{children}</div>
+
+        <div className={`asideright fixed right-0 top-0 h-screen ${asideWidth} flex flex-col`}>
+          <div className="clip-path-bottom h-[30vh]" style={{ backgroundColor: "#575757" }}>
+            <div className="aside-hover">Cinza</div>
+          </div>
+
+          <div className="aside-block" style={{ backgroundColor: "#ffffff", marginTop: "-50px" }}>
+            <div className="aside-hover" style={{ color: "#000" }}>Branco</div>
+          </div>
+
+          <div className="aside-block" style={{ backgroundColor: "#ED4242" }}>
+            <div className="aside-hover">Vermelho</div>
+          </div>
+
+          <div className="aside-block" style={{ backgroundColor: "#4292ED" }}>
+            <div className="aside-hover">Azul</div>
+          </div>
+
+          <div className="aside-block black clip-path-top h-[40vh]" style={{ backgroundColor: "#000000" }}>
+            <div className="aside-hover">Preto</div>
+          </div>
+        </div>
+
       </body>
     </html>
   );
