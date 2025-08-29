@@ -8,19 +8,19 @@
   --tertiary: #ED4242;
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
@@ -28,8 +28,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+input {
+  outline: none;
+}
+
 .aside-block {
-  flex: 2;
+  /* flex: 1; */
+  height: 15vh;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -37,6 +42,7 @@ body {
   align-items: center;
   transition: flex 0.3s ease;
   clip-path: polygon(0 50px, 100% 0, 100% calc(100% - 50px), 0% 100%);
+  transition: height 0.5s ease-in-out, z-index 0.3s ease, opacity 0.3s ease;
 }
 
 .aside-block+.aside-block {
@@ -49,14 +55,16 @@ body {
   color: white;
   font-weight: bold;
   opacity: 0;
-  transition: opacity 0.3s ease;
   position: relative;
   z-index: 2;
+  transition: opacity 0.3s ease;
 }
 
 .aside-block:not(.black):hover {
-  flex: 3;
+  /* flex: 4; */
+  height: 65vh;
   z-index: 10;
+  transition: opacity 0.3s ease, height 1s ease-in-out;
 }
 
 .aside-block:not(.black):hover .aside-hover {
@@ -73,6 +81,6 @@ body {
 
 /* bloco preto maior */
 .aside-block.black {
-  height: 50vh;
-  flex: 1;
+  height: 55vh;
+  flex: 3;
 }

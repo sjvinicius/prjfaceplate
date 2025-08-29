@@ -1,5 +1,6 @@
 'use client'
-import { Link, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -80,44 +81,70 @@ export default function Login() {
 
     return (
         <div className="flex flex-col items-center h-screen py-5 px-3">
-            <h1>Bem vindo a FacePlate</h1>
 
-            <div className="my-auto flex flex-col justify-center items-center">
+            <div
+                className="w-[60vh] my-auto flex flex-col h-[90vh] rounded-md px-[10vh] py-[3vh] justify-center items-center bg-[var(--background)]"
+                style={{
+                    filter: "drop-shadow(-6px 4px 6.8px rgba(0, 0, 0, 0.25))"
+                }}
+            >
 
-                <input
-                    type="email"
-                    placeholder="example@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mb-3 px-4 py-2 border rounded w-full max-w-xs"
-                    required={true}
-                    onKeyDown={handleKeyDown}
-                />
+                <div className="flex flex-col gap-1 w-full items-center">
 
-                <input
-                    type="password"
-                    placeholder="********"
-                    value={pwd}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="mb-5 px-4 py-2 border rounded w-full max-w-xs"
-                    required={true}
-                    onKeyDown={handleKeyDown}
-                />
+                    <div className="flex flex-col text-center justify-center items-center mb-5">
+                        <img src="/logo.svg" />
+                        <p className="text-sm">Tecnologia e proteção para sua casa, em um só lugar.</p>
+                    </div>
+                    <div className="flex flex-col gap-1 w-full">
+                        <label className="text-sm" htmlFor="email">
+                            Usuário
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="example@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="mb-3 text-sm px-4 py-2 border rounded w-full max-w-xs"
+                            required={true}
+                            onKeyDown={handleKeyDown}
+                        />
+                    </div>
 
-                <button
-                    onClick={handleLogin}
-                    disabled={isloading}
-                    className="px-4 py-2 w-full text-center justify-center rounded bg-blue-800 text-white hover:bg-orange-600 flex items-center gap-2 disabled:opacity-50"
-                >
-                    {isloading ? 'Entrando...' : (
-                        <>
-                            Entrar
-                            <LogIn size={18} />
-                        </>
-                    )}
-                </button>
+                    <div className="flex flex-col gap-1 w-full">
+                        <label className="text-sm" htmlFor="password">
+                            Senha
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="********"
+                            value={pwd}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="mb-5 px-4 text-sm py-2 border rounded w-full max-w-xs"
+                            required={true}
+                            onKeyDown={handleKeyDown}
+                        />
+                    </div>
 
+                    <button
+                        onClick={handleLogin}
+                        disabled={isloading}
+                        className="text-sm w-30 px-4 py-2 cursor-pointer text-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500 flex items-center gap-2 disabled:opacity-50"
+                    >
+                        {isloading ? 'Entrando...' : (
+                            <>
+                                Entrar
+                                <LogIn size={18} />
+                            </>
+                        )}
+                    </button>
+                </div>
 
+                <div className="text-center" style={{ marginTop: "auto" }}>
+                    <p className="text-xs">Não possui uma conta? <strong><Link href="/cadastro">Cadastre-se</Link></strong></p>
+                    <Link href="/forgotpassword"> <strong><p className="text-xs">Esqueci minha senha </p></strong></Link>
+                </div>
             </div>
 
             <Toaster />

@@ -32,27 +32,28 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);"}}
       >
         <div className="flex-1">{children}</div>
 
         <div className={`asideright fixed right-0 top-0 h-screen ${asideWidth} flex flex-col`}>
-          <div className="clip-path-bottom h-[30vh]" style={{ backgroundColor: "#575757" }}>
+          <div className="clip-path-bottom bg-[var(--secondary)]" style={{ flex: "1.5" }}>
             <div className="aside-hover">Cinza</div>
           </div>
 
-          <div className="aside-block" style={{ backgroundColor: "#ffffff", marginTop: "-50px" }}>
+          <div className="aside-block bg-[var(--background)]" style={{ marginTop: "-50px" }}>
             <div className="aside-hover" style={{ color: "#000" }}>Branco</div>
           </div>
 
-          <div className="aside-block" style={{ backgroundColor: "#ED4242" }}>
+          <div className="aside-block bg-[var(--tertiary)]">
             <div className="aside-hover">Vermelho</div>
           </div>
 
-          <div className="aside-block" style={{ backgroundColor: "#4292ED" }}>
+          <div className="aside-block bg-[var(--primary)]">
             <div className="aside-hover">Azul</div>
           </div>
 
-          <div className="aside-block black clip-path-top h-[40vh]" style={{ backgroundColor: "#000000" }}>
+          <div className="aside-block black clip-path-top bg-[var(--foreground)]">
             <div className="aside-hover">Preto</div>
           </div>
         </div>
