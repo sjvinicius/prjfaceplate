@@ -1,81 +1,22 @@
-'use client'
+"use client"
+
 import { LogIn } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 
-export default function Login() {
+export default function SignIn() {
 
+
+    const [nome, setNome] = useState('')
     const [email, setEmail] = useState('')
-    const [pwd, setPassword] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [dtnasc, setDtnasc] = useState('')
     const [isloading, setLoading] = useState(false);
-
-    const searchParams = useSearchParams();
-
-    useEffect(() => {
-
-        if (searchParams.get('expired')) {
-            toast.error("Sessão expirada, faça login novamente.", {
-                style: {
-                    borderRadius: "10px",
-                    background: "#DEAF21",
-                    color: "#FFF",
-                },
-                duration: 2000,
-            });
-        }
-    }, [searchParams]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            handleLogin();
-        }
-    };
-
-    const handleLogin = async () => {
-        setLoading(true);
-
-        try {
-
-            let redirect = "/consulta"
-
-            if (!email || !pwd) {
-                throw new Error("Preencha corretamente os campos.")
-            }
-
-            const res = await fetch('/api/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, pwd }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.erro || 'Erro de autenticação, entre em contato com o suporte.');
-
-            const { role } = data
-
-            if (["admin", "gerente"].includes(role)) {
-
-                redirect = "/dashboard"
-            }
-
-            const params = new URLSearchParams(window.location.search);
-            const redirectTo = params.get('redirect') || redirect;
-
-            window.location.href = redirectTo;
-        } catch (err: any) {
-            toast.error(err.message, {
-                style: {
-                    borderRadius: "10px",
-                    background: "#333",
-                    color: "#fff",
-                },
-                duration: 2000,
-            });
-
-            setLoading(false);
+            // handleLogin();
         }
     };
 
@@ -93,20 +34,35 @@ export default function Login() {
                     }}
                 >
 
-                    <div className="flex flex-col gap-1 w-full items-center justify-center">
+                    <div className="flex flex-col gap-1 w-full items-center">
 
                         <div className="flex flex-col text-center justify-center items-center mb-5">
                             <img src="/logo.svg" />
                             <p className="text-sm">Tecnologia e proteção para sua casa, em um só lugar.</p>
                         </div>
+                        <div className="flex flex-col gap-1 w-full">
+                            <label className="text-sm" htmlFor="nome">
+                                Nome
+                            </label>
+                            <input
+                                id="nome"
+                                type="text"
+                                placeholder="example@example.com"
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                                className="mb-3 text-sm px-4 py-2 border rounded w-full max-w-xs"
+                                required={true}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </div>
 
                         <div className="flex flex-col gap-1 w-full">
                             <label className="text-sm" htmlFor="email">
-                                Usuário
+                                Email
                             </label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 placeholder="example@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -117,45 +73,56 @@ export default function Login() {
                         </div>
 
                         <div className="flex flex-col gap-1 w-full">
-                            <label className="text-sm" htmlFor="password">
-                                Senha
+                            <label className="text-sm" htmlFor="cpf">
+                                CPF
                             </label>
                             <input
-                                id="password"
-                                type="password"
+                                id="cpf"
+                                type="text"
                                 placeholder="********"
-                                value={pwd}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={cpf}
+                                onChange={(e) => setCpf(e.target.value)}
                                 className="mb-5 px-4 text-sm py-2 border rounded w-full max-w-xs"
                                 required={true}
                                 onKeyDown={handleKeyDown}
                             />
                         </div>
 
+                        <div className="flex flex-col gap-1 w-full">
+                            <label className="text-sm" htmlFor="dtnasc">
+                                Data Nascimento
+                            </label>
+                            <input
+                                id="dtnasc"
+                                type="datetime-local"
+                                placeholder="********"
+                                value={dtnasc}
+                                onChange={(e) => setDtnasc(e.target.value)}
+                                className="mb-5 px-4 text-sm py-2 border rounded w-full max-w-xs"
+                                required={true}
+                                onKeyDown={handleKeyDown}
+                                max={new Date().toISOString()}
+                            />
+                        </div>
+
                         <button
-                            onClick={handleLogin}
+                            // onClick={handleLogin}
                             disabled={isloading}
                             className="text-sm w-30 px-4 py-2 cursor-pointer text-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500 flex items-center gap-2 disabled:opacity-50"
                         >
-                            {isloading ? 'Entrando...' : (
+                            {isloading ? 'Cadastrando...' : (
                                 <>
-                                    Entrar
+                                    Cadastrar
                                     <LogIn size={18} />
                                 </>
                             )}
                         </button>
                     </div>
-
-                    <div className="text-center" style={{ marginTop: "auto" }}>
-                        <p className="text-xs">Não possui uma conta? <strong><Link href="/signin">Cadastre-se</Link></strong></p>
-                        <Link href="/forgotpassword"> <strong><p className="text-xs">Esqueci minha senha </p></strong></Link>
-                    </div>
+                    <p className="text-xs" style={{ marginTop: "auto" }}>Já tem uma conta? <strong><Link href="/login">Acesse</Link></strong></p>
                 </div>
 
                 <Toaster />
             </div>
         </>
-    );
+    )
 }
-
-

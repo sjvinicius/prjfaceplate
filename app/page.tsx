@@ -4,7 +4,12 @@ import Link from "next/link";
 export default function Home() {
   return (
     <>
-      <Link href="/login">Ir para Login</Link>
+      <div className="h-[100vh] w-full flex justify-center items-center">
+
+        <div className="bg-white px-10 py-5 rounded-md">
+          <Link href="/login">IR PARA LOGIN</Link>
+        </div>
+      </div>
     </>
   );
 }

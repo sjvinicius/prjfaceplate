@@ -35,6 +35,38 @@ export default function ForgotPassword() {
                     </div>
 
                     <div className="flex flex-col gap-1 w-full">
+                        <label className="text-sm" htmlFor="email">
+                            email
+                        </label>
+                        <input
+                            id="email"
+                            type="text"
+                            placeholder="usuario@dominio.com"
+                            value={newpwd}
+                            onChange={(e) => setNewpwd(e.target.value)}
+                            className="mb-5 px-4 text-sm py-2 border rounded w-full max-w-xs"
+                            required={true}
+                            onKeyDown={handleKeyDown}
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1 w-full">
+                        <label className="text-sm" htmlFor="codigo">
+                            Código
+                        </label>
+                        <input
+                            id="codigo"
+                            type="text"
+                            placeholder="FP-123456"
+                            value={newpwd}
+                            onChange={(e) => setNewpwd(e.target.value)}
+                            className="mb-5 px-4 text-sm py-2 border rounded w-full max-w-xs"
+                            required={true}
+                            onKeyDown={handleKeyDown}
+                        />
+                    </div>
+
+                    <div className="flex flex-col gap-1 w-full">
                         <label className="text-sm" htmlFor="newpwd">
                             Nova Senha
                         </label>
@@ -52,7 +84,7 @@ export default function ForgotPassword() {
 
                     <div className="flex flex-col gap-1 w-full">
                         <label className="text-sm" htmlFor="dtnasc">
-                            Data Nascimento
+                            Confirmar Senha
                         </label>
                         <input
                             id="confirmpwd"

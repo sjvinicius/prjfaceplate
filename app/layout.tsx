@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Quicksand } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
+
+const geistQuickSand = Quicksand({
+  variable: "--font-geist-quicksand",
   subsets: ["latin"],
 });
 
@@ -31,10 +36,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);"}}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistQuickSand.variable} antialiased`}
+        style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
       >
-        <div className="flex-1">{children}</div>
+        <div className="flex-1">
+          <img src="/leftbg.svg" style={{ position: "absolute", height: "100vh", left: 0 }}></img>
+          <img src="/rightbg.svg" style={{ position: "absolute", height: "100vh", right: 0 }}></img>
+          {children}
+        </div>
 
         <div className={`asideright fixed right-0 top-0 h-screen ${asideWidth} flex flex-col`}>
           <div className="clip-path-bottom bg-[var(--secondary)]" style={{ flex: "1.5" }}>
