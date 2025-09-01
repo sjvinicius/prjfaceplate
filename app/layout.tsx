@@ -41,8 +41,8 @@ export default function RootLayout({
         style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
       >
         <div className="flex-1">
-          <img src="/leftbg.svg" style={{ position: "absolute", height: "100vh", left: 0 }}></img>
-          <img src="/rightbg.svg" style={{ position: "absolute", height: "100vh", right: 0 }}></img>
+          <img src="/leftbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", left: 0 }}></img>
+          <img src="/rightbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", right: 0 }}></img>
           {children}
         </div>
 

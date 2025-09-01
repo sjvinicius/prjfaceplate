@@ -38,7 +38,7 @@ export default function Login() {
 
         try {
 
-            let redirect = "/consulta"
+            let redirect = "/"
 
             if (!email || !pwd) {
                 throw new Error("Preencha corretamente os campos.")
@@ -54,11 +54,11 @@ export default function Login() {
 
             if (!res.ok) throw new Error(data.erro || 'Erro de autenticação, entre em contato com o suporte.');
 
-            const { role } = data
+            const { role } = data.user
 
             if (["admin", "gerente"].includes(role)) {
 
-                redirect = "/dashboard"
+                redirect = "/#"
             }
 
             const params = new URLSearchParams(window.location.search);
