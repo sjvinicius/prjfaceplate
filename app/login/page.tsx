@@ -38,7 +38,7 @@ export default function Login() {
 
         try {
 
-            let redirect = "/"
+            let redirect = "/vehicles"
 
             if (!email || !pwd) {
                 throw new Error("Preencha corretamente os campos.")
@@ -58,7 +58,7 @@ export default function Login() {
 
             if (["admin", "gerente"].includes(role)) {
 
-                redirect = "/#"
+                redirect = "/vehicles"
             }
 
             const params = new URLSearchParams(window.location.search);
