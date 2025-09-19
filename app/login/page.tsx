@@ -36,9 +36,13 @@ export default function Login() {
     const handleLogin = async () => {
         setLoading(true);
 
+        let toastId: string | null = null
+
         try {
 
             let redirect = "/vehicles"
+
+            toastId = toast.loading("Checando credenciais...");
 
             if (!email || !pwd) {
                 throw new Error("Preencha corretamente os campos.")
@@ -54,9 +58,9 @@ export default function Login() {
 
             if (!res.ok) throw new Error(data.erro || 'Erro de autenticação, entre em contato com o suporte.');
 
-            const { role } = data.user
+            const { realm } = data.user
 
-            if (["admin", "gerente"].includes(role)) {
+            if (["admin", "gerente"].includes(realm)) {
 
                 redirect = "/vehicles"
             }
@@ -75,7 +79,13 @@ export default function Login() {
                 duration: 2000,
             });
 
+        } finally {
             setLoading(false);
+
+            if (toastId) {
+
+                toast.dismiss(toastId);
+            }
         }
     };
 
@@ -135,7 +145,7 @@ export default function Login() {
                         <button
                             onClick={handleLogin}
                             disabled={isloading}
-                            className="text-sm w-30 px-4 py-2 cursor-pointer text-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500 flex items-center gap-2 disabled:opacity-50"
+                            className="text-sm w-30 px-4 py-2 cursor-pointer text-center justify-center rounded bg-[var(--primary)] text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50"
                         >
                             {isloading ? 'Entrando...' : (
                                 <>
@@ -148,7 +158,7 @@ export default function Login() {
 
                     <div className="text-center" style={{ marginTop: "auto" }}>
                         <p className="text-xs">Não possui uma conta? <strong><Link href="/signin">Cadastre-se</Link></strong></p>
-                        <Link href="/forgotpassword"> <strong><p className="text-xs">Esqueci minha senha </p></strong></Link>
+                        {/* <Link href="/forgotpassword"> <strong><p className="text-xs">Esqueci minha senha </p></strong></Link> */}
                     </div>
                 </div>
 

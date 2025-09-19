@@ -1,6 +1,6 @@
 import { GetUserByEmail } from "@/lib/repos/user";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { generateToken } from "@/lib/jwt/jwt";
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
@@ -31,9 +31,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Credenciais incorretas." }, { status: 404 })
     }
 
-    const token = await generateToken({ email: String(user.email), role: String(user.role), nome: String(user.nome), lojacliente_id: 1 });
+    const token = await generateToken({ email: String(user.email), realm: String(user.realm), nome: String(user.nome), lojacliente_id: 1 });
 
-    const response = NextResponse.json({ user: { token, email: String(user.email), role: String(user.role), nome: String(user.nome) } }, { status: 200 });
+    const response = NextResponse.json({ user: { token, email: String(user.email), realm: String(user.realm), nome: String(user.nome) } }, { status: 200 });
 
     response.cookies.set('nextauth-token', token, {
         httpOnly: true,

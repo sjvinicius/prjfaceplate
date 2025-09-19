@@ -1,8 +1,11 @@
 export interface Usuario {
     usuario_id?: number;
     nome: string;
-    role: string;
+    realm: string;
     email: string;
+    dtnasc: string;
+    phone: string;
+    cpf: string;
     password: string;
     criacao_token?: string;
     criacao_data?: string;
@@ -13,4 +16,5 @@ export interface Usuario {
 
 export interface DatabaseClient {
     GetUserByEmail(email: string): Promise<Partial<Usuario> | null>;
+    SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> | null>;
 }

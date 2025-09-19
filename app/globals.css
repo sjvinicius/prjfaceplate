@@ -21,6 +21,10 @@
     --foreground: #ededed;
   }
 } */
+ 
+* {
+  transition: all 0.2s ease-in-out;
+}
 
 body {
   background: var(--background);

@@ -9,11 +9,11 @@ export async function GetUserByEmail(email: string): Promise<Partial<Usuario> | 
     return user
 }
 
-// export async function SetUser(usuario: Partial<Usuario>): Promise<Partial<Usuario> | null> {
+export async function SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> | null> {
 
-//     const db = await getDb();
-    
-//     const user = await db.setUsuario(usuario)
+    const db = await getDb();
+    const usersetted = await db.SetUser(user)
 
-//     return user
-// }
+    console.log(usersetted)
+    return usersetted
+}

@@ -4,7 +4,7 @@ const JWT_SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET_KEY!);
 
 export interface JwtPayload extends JWTPayload {
     email: string;
-    role: string | string[];
+    realm: string | string[];
     nome: string;
     lojacliente_id: string | number;
 }
