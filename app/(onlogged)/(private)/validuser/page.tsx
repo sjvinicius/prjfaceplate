@@ -1,9 +1,9 @@
-'use client'
-import { useState } from "react"
+import CardValidacaoUser from "@/components/cardvalidationuser"
+import { GetPendingUsers } from "@/lib/repos/user"
 
-export default function ValidUser() {
+export default async function ValidUser() {
 
-    const [isloading, SetIsLoading] = useState(false)
+    const usuarios = await GetPendingUsers()
 
     return (
         <div className="flex flex-col items-center h-screen">
@@ -18,56 +18,10 @@ export default function ValidUser() {
                     <h1 className="text-[var(--primary)]">Validação de Usuários</h1>
                 </div>
 
-                <div className="flex flex-col h-full overflow-y w-[90%] m-auto">
-                    <div className="flex items-center justify-center gap-3 rounded border border-[var(--primary)] border-solid py-5 px-10">
-
-                        <div className="flex-[2]">
-                            <label
-                                htmlFor="name"
-                                className="block w-full border-b-[3px] border-[var(--primary)] border-solid"
-                            >
-                                Nome
-                            </label>
-                            <h4 className="text-xl">Vinícius S jesus</h4>
-                        </div>
-
-                        <div className="flex-1">
-                            <label
-                                htmlFor="name"
-                                className="block w-full border-b-[3px] border-[var(--primary)] border-solid"
-                            >
-                                Tipo
-                            </label>
-                            <h4 className="text-xl">Morador</h4>
-                        </div>
-
-                        <div className="flex-1">
-                            <label
-                                htmlFor="name"
-                                className="block w-full border-b-[3px] border-[var(--primary)] border-solid"
-                            >
-                                Data Criação
-                            </label>
-                            <h4 className="text-xl">23/09/2025 17:34</h4>
-                        </div>
-
-                        <div className="flex-none">
-                            <button
-                                disabled={isloading}
-                                className="text-sm px-4 py-2 cursor-pointer text-center justify-center rounded bg-[var(--tertiary)] text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50"
-                            >
-                                Reprovar
-                            </button>
-                        </div>
-                        <div className="flex-none">
-                            <button
-                                disabled={isloading}
-                                className="text-sm px-4 py-2 cursor-pointer text-center justify-center rounded bg-green-600 text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50"
-                            >
-                                Aprovar
-                            </button>
-                        </div>
-                    </div>
+                <div className="flex flex-col gap-4 h-full overflow-y w-[90%] m-auto">
+                    {usuarios ? usuarios.map((v) => (
+                        <CardValidacaoUser key={v.usuario_id} usuario={v} />
+                    )) : <p className="mx-auto text-2xl"> Nenhum usuário pendente de validação.</p>}
                 </div>
             </div>
         </div>

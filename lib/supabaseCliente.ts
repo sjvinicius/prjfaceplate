@@ -140,6 +140,38 @@ export const supabaseDb: DatabaseClient = {
             }
         }));
     },
+    GetPendingUsers: async (): Promise<Partial<Usuario>[] | null> => {
+        const { data, error } = await supabase
+            .from('usuario')
+            .select(`
+                usuario_id,
+                nome,
+                realm,
+                email,
+                dtnasc,
+                phone,
+                cpf,
+                criacao_data
+            `).eq('status', 'P')
+            .order('criacao_data', { ascending: false });
+
+        if (error) throw new Error(error.message);
+
+        if (!data || data.length === 0) return null;
+        console.log(data)
+
+        // Mapeia os registros corretamente no formato do Veiculo
+        return data.map((row: any) => ({
+            usuario_id: row.usuario_id,
+            nome: row.nome,
+            realm: row.realm,
+            email: row.email,
+            dtnasc: row.dtnasc,
+            phone: row.phone,
+            cpf: row.cpf,
+            criacao_data: row.criacao_data,
+        }));
+    },
     SetUpdateVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null> => {
 
         if (!veiculo.usuarioveiculo_id) {
@@ -163,6 +195,38 @@ export const supabaseDb: DatabaseClient = {
             .from("usuarioveiculo")
             .update(updateFields)
             .eq("usuarioveiculo_id", veiculo.usuarioveiculo_id)
+            .select()
+            .single();
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return data;
+    },
+    SetUpdateUser: async (usuario: Partial<Usuario>): Promise<Partial<Usuario> | null> => {
+
+        if (!usuario.usuario_id) {
+
+            throw new Error("Parâmetros insuficientes.")
+        }
+
+        const { ...updateFields } = usuario;
+
+        if (Object.keys(updateFields).length === 0) {
+            throw new Error("Nenhum campo enviado para atualização.");
+        }
+
+        if (!updateFields.alteracao_data) {
+            updateFields.alteracao_data = new Date().toISOString();
+        }
+
+        updateFields.alteracao_data = new Date().toISOString();
+
+        const { data, error } = await supabase
+            .from("usuario")
+            .update(updateFields)
+            .eq("usuario_id", usuario.usuario_id)
             .select()
             .single();
 

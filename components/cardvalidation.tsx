@@ -1,9 +1,8 @@
 "use client"
 
-import { aprovarVeiculo, reprovarVeiculo, SetUpdateVehicle } from "@/lib/repos/vehicle";
+import { aprovarVeiculo, reprovarVeiculo } from "@/lib/repos/vehicle";
 import { useTransition } from "react"
 import toast from "react-hot-toast";
-// import { aprovarVeiculo, reprovarVeiculo } from "@/lib/actions"
 
 export default function CardValidacao({ veiculo }: { veiculo: any }) {
     const [isPending, startTransition] = useTransition()
@@ -29,6 +28,7 @@ export default function CardValidacao({ veiculo }: { veiculo: any }) {
             }
         })
     }
+    
     return (
         <div className="flex items-center justify-between gap-3 rounded border border-[var(--primary)] py-5 px-10">
             <div className="flex-1">

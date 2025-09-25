@@ -32,5 +32,7 @@ export interface DatabaseClient {
     GetUserByEmail(email: string): Promise<Partial<Usuario> | null>;
     SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> | null>;
     GetPendingVehicle(): Promise<Partial<Veiculo>[] | null>;
+    GetPendingUsers(): Promise<Partial<Usuario>[] | null>;
     SetUpdateVehicle(veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null>;
+    SetUpdateUser(usuario: Partial<Usuario>): Promise<Partial<Usuario> | null>;
 }
