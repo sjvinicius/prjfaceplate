@@ -58,7 +58,6 @@ export const supabaseDb: DatabaseClient = {
             throw new Error("Nome completo inválido.")
         }
 
-
         if (!user.email.trim().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
 
             throw new Error("Email inválido.");
@@ -73,6 +72,7 @@ export const supabaseDb: DatabaseClient = {
         if (dtnascDate < minDate || dtnascDate > maxDate) {
             throw new Error("Data de nascimento inválida (deve estar entre mínimo: 18 anos e máximo: 120 anos).");
         }
+        const dtnasciso = dtnascDate.toISOString().split("T")[0];
 
         const now = new Date().toISOString();
         const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -84,7 +84,7 @@ export const supabaseDb: DatabaseClient = {
                 realm: user.realm,
                 email: user.email,
                 phone: user.phone,
-                dtnasc: user.dtnasc,
+                dtnasc: dtnasciso,
                 cpf: user.cpf,
                 password: hashedPassword,
                 alteracao_token: "sistema",
@@ -94,6 +94,18 @@ export const supabaseDb: DatabaseClient = {
             .single();
 
         if (error) throw new Error("Houve um erro ao criar usuário.")
+
+        const { error: errorvalid  } = await supabase
+            .from("usuariovalidacao")
+            .upsert({
+                usuario_id: data.usuario_id,
+                criacao_token: "sistema",
+                criacao_data: now,
+                alteracao_token: "sistema",
+                alteracao_data: now,
+            })
+
+        if (errorvalid) throw new Error("Houve um erro ao inserir para validação.")
 
         return data;
     },

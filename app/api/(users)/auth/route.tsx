@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     const response = NextResponse.json({ user: { token, email: String(user.email), realm: String(user.realm), nome: String(user.nome) } }, { status: 200 });
 
-    response.cookies.set('nextauth-token', token, {
+    response.cookies.set('nextauthprjfaceplate-token', token, {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
