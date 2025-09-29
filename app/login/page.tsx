@@ -60,11 +60,6 @@ export default function Login() {
 
             const { realm } = data.user
 
-            if (["admin", "gerente"].includes(realm)) {
-
-                redirect = "/vehicles"
-            }
-
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirect') || redirect;
 

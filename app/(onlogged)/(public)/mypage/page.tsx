@@ -6,19 +6,14 @@ export default function ValidUser() {
     const [isloading, SetIsLoading] = useState(false)
 
     return (
-        <div className="flex flex-col items-center h-screen px-3">
+        <div className="flex flex-col items-center min-h-screen">
+            <div className="w-full pt-20 max-w-7xl flex flex-col h-full rounded-md py-6 bg-[var(--background)] gap-10 min-h-screen">
 
-            <div
-                className="w-[90vw] my-auto flex flex-col h-full rounded-md py-[3vh] bg-[var(--background)] gap-15"
-                style={{
-                    filter: "drop-shadow(-6px 4px 6.8px rgba(0, 0, 0, 0.25))"
-                }}
-            >
                 <div className="py-3 text-4xl rounded-r-lg border border-l-[0] border-[var(--primary)] border-solid ps-20 w-[40vw]">
                     <h1 className="text-[var(--primary)]">Minhas Informações</h1>
                 </div>
 
-                <div className="flex flex-col h-full overflow-y w-[90%] m-auto gap-25">
+                <div className="flex flex-col h-full overflow-y w-[90%] gap-25 px-4">
 
                     <div className="flex gap-3">
                         <div className="flex-[2] flex flex-col gap-1">

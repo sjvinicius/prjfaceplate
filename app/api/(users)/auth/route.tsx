@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const user = await GetUserByEmail(email)
 
-    if (!user) {
+    if (!user?.usuario_id) {
 
         return NextResponse.json({ error: "Credenciais incorretas." }, { status: 404 })
     }
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Credenciais incorretas." }, { status: 404 })
     }
 
-    const token = await generateToken({ email: String(user.email), realm: String(user.realm), nome: String(user.nome), lojacliente_id: 1 });
+    const token = await generateToken({ email: String(user.email), realm: String(user.realm), nome: String(user.nome), usuario_id: user.usuario_id ,lojacliente_id: 1 });
 
     const response = NextResponse.json({ user: { token, email: String(user.email), realm: String(user.realm), nome: String(user.nome) } }, { status: 200 });
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         secure: true,
         sameSite: 'strict',
         path: '/',
-        maxAge: 60 * 30,
+        maxAge: 60 * 60 * 4, // 4 horas
     });
 
     return response;

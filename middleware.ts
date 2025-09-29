@@ -44,6 +44,7 @@ export async function middleware(req: NextRequest) {
 
     const token = req.cookies.get('nextauthprjfaceplate-token')?.value;
 
+    console.log(token)
     const redirectUrl = new URL('/login', req.url);
     // const redirectUrl = new URL('/?redirect=' + encodeURIComponent(pathname), req.url);
 

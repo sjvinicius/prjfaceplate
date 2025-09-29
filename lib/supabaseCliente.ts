@@ -1,6 +1,6 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
-import { DatabaseClient, Usuario, Veiculo } from './database';
+import { DatabaseClient, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
 import { GetUserByEmail } from './repos/user';
 import bcrypt from "bcryptjs"
 
@@ -26,7 +26,7 @@ export const supabaseDb: DatabaseClient = {
 
         const { data, error } = await supabase
             .from('usuario')
-            .select('nome, email, phone, cpf, dtnasc, password, realm, status')
+            .select('usuario_id, nome, email, phone, cpf, dtnasc, password, realm, status')
             .eq('email', email);
 
         if (error) throw new Error(error.message);
@@ -36,6 +36,7 @@ export const supabaseDb: DatabaseClient = {
         if (!row) return null;
 
         return {
+            usuario_id: row.usuario_id,
             nome: String(row.nome),
             email: String(row.email),
             phone: String(row.phone),
@@ -95,7 +96,7 @@ export const supabaseDb: DatabaseClient = {
 
         if (error) throw new Error("Houve um erro ao criar usuário.")
 
-        const { error: errorvalid  } = await supabase
+        const { error: errorvalid } = await supabase
             .from("usuariovalidacao")
             .upsert({
                 usuario_id: data.usuario_id,
@@ -170,7 +171,6 @@ export const supabaseDb: DatabaseClient = {
         if (error) throw new Error(error.message);
 
         if (!data || data.length === 0) return null;
-        console.log(data)
 
         // Mapeia os registros corretamente no formato do Veiculo
         return data.map((row: any) => ({
@@ -247,7 +247,108 @@ export const supabaseDb: DatabaseClient = {
         }
 
         return data;
-    }
+    },
+    isValidVehicle: async (veiculo: Partial<Veiculo>): Promise<{ success: boolean }> => {
 
+        if (!veiculo.placa) {
 
+            throw new Error("Parâmetros insuficientes.");
+        }
+
+        const { data, error } = await supabase
+            .from('usuarioveiculo')
+            .select(`
+                usuarioveiculo_id,
+                placa,
+                usuario:usuario_id (
+                status
+                )
+            `)
+            .eq('placa', veiculo.placa)
+            .eq('status', 'A');
+
+        if (error) throw new Error(error.message);
+
+        const row = data.find(r => r.usuario?.some(u => u.status === 'A'));
+
+        return { success: !!row };
+    },
+    SetLogVehicle: async (logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean }> => {
+
+        if (!logusuarioveiculo.placa) {
+
+            throw new Error("Parâmetros insuficientes.");
+        }
+
+        const { data, error } = await supabase
+            .from('logusuarioveiculo')
+            .insert(logusuarioveiculo)
+
+        if (error) throw new Error(error.message);
+
+        return { success: true }
+    },
+    SetVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | { error: string }> => {
+
+        if (!veiculo.usuario_id || !veiculo.marca || !veiculo.modelo || !veiculo.cor || !veiculo.placa) {
+
+            throw new Error("Parâmetros insuficientes.");
+        }
+
+        const { data, error } = await supabase
+            .from("veiculos")
+            .insert(veiculo)
+            .select()
+            .single();
+
+        if (error) throw new Error(error.message);
+
+        return data
+    },
+    GetVehicles: async (usuario_id: string | number = ""): Promise<Partial<Veiculo>[] | null> => {
+        let query = supabase
+            .from("usuarioveiculo")
+            .select(
+                `
+            usuarioveiculo_id,
+            marca,
+            modelo,
+            placa,
+            status,
+            usuario:usuario_id (
+                usuario_id,
+                nome,
+                realm,
+                email,
+                dtnasc,
+                phone,
+                cpf
+            )
+        `
+            )
+            .eq("status", "A")
+            .order("criacao_data", { ascending: false });
+
+        if (usuario_id) {
+            query = query.eq("usuario_id", usuario_id);
+        }
+
+        const { data, error } = await query;
+
+        if (error) throw new Error(error.message);
+
+        if (!data || data.length === 0) return null;
+
+        return data.map((row: any) => ({
+            usuarioveiculo_id: row.usuarioveiculo_id,
+            marca: row.marca,
+            modelo: row.modelo,
+            placa: row.placa,
+            status: row.status,
+            usuario_id: {
+                usuario_id: row.usuario?.usuario_id,
+                nome: row.usuario?.nome,
+            },
+        }));
+    },
 }

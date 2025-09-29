@@ -15,8 +15,7 @@ export async function SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> 
 
     const db = await getDb();
     const usersetted = await db.SetUser(user)
-
-    console.log(usersetted)
+    
     return usersetted
 }
 

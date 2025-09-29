@@ -40,7 +40,7 @@ export default function RootLayout({
         className={`${geistQuickSand.variable} antialiased`}
         style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
       >
-        <div className="flex-1">
+        <div className="flex-1 mr-10">
           <img src="/leftbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", left: 0 }}></img>
           <img src="/rightbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", right: 0 }}></img>
           {children}

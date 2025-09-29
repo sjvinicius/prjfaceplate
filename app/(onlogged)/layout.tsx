@@ -43,6 +43,7 @@ export default function OnLoggedLayout({
             <button
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="fixed hover:bg-white/20 top-4 left-4 z-50 p-3 text-white rounded shadow-lg cursor-pointer"
+                style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
             >
 
                 <Menu className="w-6 h-6" />

@@ -6,13 +6,14 @@ export interface JwtPayload extends JWTPayload {
     email: string;
     realm: string | string[];
     nome: string;
+    usuario_id: string | number;
     lojacliente_id: string | number;
 }
 
 export async function generateToken(payload: JwtPayload): Promise<string> {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
-        .setExpirationTime('60m')
+        .setExpirationTime('240m')
         .sign(JWT_SECRET_KEY);
 }
 
