@@ -278,8 +278,6 @@ export default function SignIn() {
                     </div>
                     <p className="text-xs" style={{ marginTop: "auto" }}>Já tem uma conta? <strong><Link href="/login">Acesse</Link></strong></p>
                 </div>
-
-                <Toaster />
             </div >
         </>
     )

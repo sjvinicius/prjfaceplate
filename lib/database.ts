@@ -26,6 +26,7 @@ export interface Veiculo {
     alteracao_token?: string;
     alteracao_data?: string;
     status?: string;
+    logusuarioveiculo_id?: Partial<LogUsuarioVeiculo>
 }
 
 export interface LogUsuarioVeiculo {

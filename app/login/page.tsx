@@ -157,7 +157,6 @@ export default function Login() {
                     </div>
                 </div>
 
-                <Toaster />
             </div>
         </>
     );

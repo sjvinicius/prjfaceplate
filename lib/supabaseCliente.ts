@@ -290,26 +290,32 @@ export const supabaseDb: DatabaseClient = {
     },
     SetVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | { error: string }> => {
 
-        if (!veiculo.usuario_id || !veiculo.marca || !veiculo.modelo || !veiculo.cor || !veiculo.placa) {
+        const usuarioId =
+            typeof veiculo.usuario_id === "object"
+                ? veiculo.usuario_id?.usuario_id
+                : veiculo.usuario_id;
 
+        if (!usuarioId || !veiculo.marca || !veiculo.modelo || !veiculo.cor || !veiculo.placa) {
             throw new Error("Parâmetros insuficientes.");
         }
 
         const { data, error } = await supabase
-            .from("veiculos")
-            .insert(veiculo)
+            .from("usuarioveiculo")
+            .insert({
+                ...veiculo,
+                usuario_id: Number(usuarioId), // força bigint
+            })
             .select()
             .single();
 
         if (error) throw new Error(error.message);
 
-        return data
+        return data;
     },
     GetVehicles: async (usuario_id: string | number = ""): Promise<Partial<Veiculo>[] | null> => {
         let query = supabase
             .from("usuarioveiculo")
-            .select(
-                `
+            .select(`
             usuarioveiculo_id,
             marca,
             modelo,
@@ -324,22 +330,42 @@ export const supabaseDb: DatabaseClient = {
                 phone,
                 cpf
             )
-        `
-            )
-            .eq("status", "A")
-            .order("criacao_data", { ascending: false });
+        `);
 
         if (usuario_id) {
             query = query.eq("usuario_id", usuario_id);
+        } else {
+            query = query.eq("status", "A");
         }
 
-        const { data, error } = await query;
-
+        const { data: veiculos, error } = await query;
         if (error) throw new Error(error.message);
+        if (!veiculos || veiculos.length === 0) return null;
 
-        if (!data || data.length === 0) return null;
+        // extrair placas para buscar só os logs que interessam
+        const placas = veiculos.map(v => v.placa).filter(Boolean);
 
-        return data.map((row: any) => ({
+        const { data: logs, error: logsError } = await supabase
+            .from("logusuarioveiculo")
+            .select("placa, criacao_data")
+            .in("placa", placas);
+
+            console.log(placas)
+        if (logsError) throw new Error(logsError.message);
+
+        const logsByPlaca = new Map<string, any>();
+        logs?.forEach(log => {
+            if (!logsByPlaca.has(log.placa)) {
+                logsByPlaca.set(log.placa, log);
+            } else {
+                const atual = logsByPlaca.get(log.placa);
+                if (new Date(log.criacao_data) > new Date(atual.criacao_data)) {
+                    logsByPlaca.set(log.placa, log);
+                }
+            }
+        });
+
+        return veiculos.map((row: any) => ({
             usuarioveiculo_id: row.usuarioveiculo_id,
             marca: row.marca,
             modelo: row.modelo,
@@ -349,6 +375,10 @@ export const supabaseDb: DatabaseClient = {
                 usuario_id: row.usuario?.usuario_id,
                 nome: row.usuario?.nome,
             },
+            logusuarioveiculo_id: {
+                criacao_data: logsByPlaca.get(row.placa)?.criacao_data || null,
+            }
         }));
+
     },
 }

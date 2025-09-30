@@ -48,3 +48,10 @@ export async function setVehicle(veiculo: Partial<Veiculo>) {
 
     return vehicle
 }
+
+export async function getVehicles(usuario_id: number | string = "") {
+    const db = await getDb();
+    const vehicle = await db.GetVehicles(usuario_id);
+
+    return vehicle
+}
