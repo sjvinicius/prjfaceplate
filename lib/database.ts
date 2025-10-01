@@ -32,7 +32,7 @@ export interface Veiculo {
 export interface LogUsuarioVeiculo {
     logusuarioveiculo_id: number;
     placa: string | number;
-    usuario_id: Partial<Usuario>;
+    // usuario_id: Partial<Usuario>;
     criacao_token?: string;
     criacao_data?: string;
     alteracao_token?: string;
@@ -51,5 +51,5 @@ export interface DatabaseClient {
     SetLogVehicle(logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean }>;
     SetVehicle(veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | { error: string }>;
     GetVehicles(usuario_id: string | number): Promise<Partial<Veiculo>[] | null>;
-
+    GetLogVehicle(placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null>;
 }

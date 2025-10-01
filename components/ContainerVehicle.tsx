@@ -1,19 +1,24 @@
 'use client'
 
 import { getVehicles } from "@/lib/repos/vehicle"
-import { useTransition, useState, useEffect } from "react"
+import { useTransition, useState, useEffect, useRef } from "react"
 import toast from "react-hot-toast"
 import CardVehicle from "./cardvehicle"
 
 export default function ContainerVehicle() {
     const [isPending, startTransition] = useTransition()
     const [vehicles, setVehicles] = useState<any[]>([])
+    const fetchedRef = useRef(false)
 
     const GetVehicles = async () => {
         let toastId: string | null = null
 
         try {
-            toastId = toast.loading("Buscando veículos...")
+
+            if(!toastId){
+
+                toastId = toast.loading("Buscando veículos...")
+            }
 
             const res = await fetch('/api/me', {
                 method: 'GET',
@@ -32,7 +37,6 @@ export default function ContainerVehicle() {
                 userid = usuario_id
             }
 
-            console.log(userid)
             const vehiclesData = await getVehicles(userid)
 
             if (!vehiclesData || vehiclesData.length === 0) {
@@ -51,6 +55,8 @@ export default function ContainerVehicle() {
     }
 
     useEffect(() => {
+        if (fetchedRef.current) return;
+        fetchedRef.current = true;
         GetVehicles()
     }, [])
 

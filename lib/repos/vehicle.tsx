@@ -55,3 +55,10 @@ export async function getVehicles(usuario_id: number | string = "") {
 
     return vehicle
 }
+
+export async function getLogVehicle(placa: number | string) {
+    const db = await getDb();
+    const vehicle = await db.GetLogVehicle(placa);
+
+    return vehicle
+}

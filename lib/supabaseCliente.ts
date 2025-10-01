@@ -396,4 +396,21 @@ export const supabaseDb: DatabaseClient = {
         }));
 
     },
+    GetLogVehicle: async (placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null> => {
+
+        if(!placa){
+
+            throw new Error("Parâmetros insuficientes");
+        }
+
+        const { data: logs, error: logsError } = await supabase
+            .from("logusuarioveiculo")
+            .select("status, criacao_data")
+            .eq("placa", placa);
+
+        if (logsError) throw new Error(logsError.message);
+
+        return logs;
+
+    },
 }

@@ -42,7 +42,7 @@ export default function Login() {
 
             let redirect = "/vehicles"
 
-            toastId = toast.loading("Checando credenciais...");
+            toastId = toast.loading("Buscando histórico...");
 
             if (!email || !pwd) {
                 throw new Error("Preencha corretamente os campos.")
