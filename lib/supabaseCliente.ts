@@ -14,6 +14,15 @@ const supabase = createClient(
     }
 );
 
+interface UsuarioV {
+    status: string;
+}
+
+interface UsuarioVeiculo {
+    usuarioveiculo_id: number;
+    placa: string;
+    usuario: UsuarioV | null; // null caso não exista
+}
 
 export const supabaseDb: DatabaseClient = {
 
@@ -249,10 +258,8 @@ export const supabaseDb: DatabaseClient = {
         return data;
     },
     isValidVehicle: async (veiculo: Partial<Veiculo>): Promise<{ success: boolean }> => {
-
         if (!veiculo.placa) {
-
-            throw new Error("Parâmetros insuficientes.");
+            throw new Error("Parâmetro 'placa' é obrigatório.");
         }
 
         const { data, error } = await supabase
@@ -261,17 +268,25 @@ export const supabaseDb: DatabaseClient = {
                 usuarioveiculo_id,
                 placa,
                 usuario:usuario_id (
-                status
+                    status
                 )
             `)
             .eq('placa', veiculo.placa)
-            .eq('status', 'A');
+            .eq("status", "A")
+            .eq('usuario.status', 'A')
+            .maybeSingle();
 
-        if (error) throw new Error(error.message);
+            console.log(veiculo.placa)
 
-        const row = data.find(r => r.usuario?.some(u => u.status === 'A'));
+        if (error) {
+            throw new Error(`Erro ao consultar veículo: ${error.message}`);
+        }
 
-        return { success: !!row };
+        if (!data || !data.usuario) {
+            return { success: false };
+        }
+
+        return { success: true };
     },
     SetLogVehicle: async (logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean }> => {
 
@@ -335,7 +350,7 @@ export const supabaseDb: DatabaseClient = {
         if (usuario_id) {
             query = query.eq("usuario_id", usuario_id);
         } else {
-            query = query.eq("status", "A");
+            // query = query.eq("status", "A");
         }
 
         const { data: veiculos, error } = await query;
@@ -350,7 +365,7 @@ export const supabaseDb: DatabaseClient = {
             .select("placa, criacao_data")
             .in("placa", placas);
 
-            console.log(placas)
+        console.log(placas)
         if (logsError) throw new Error(logsError.message);
 
         const logsByPlaca = new Map<string, any>();

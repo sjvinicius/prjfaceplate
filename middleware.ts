@@ -59,6 +59,7 @@ export async function middleware(req: NextRequest) {
                 ? NextResponse.json({ error: 'Requisição não autorizada.' }, { status: 401 })
                 : (req.nextUrl.pathname == "/" || req.nextUrl.pathname == "/login" || req.nextUrl.pathname == "/signin" ? NextResponse.next() : NextResponse.redirect(redirectUrl));
         }
+        console.log(token)
 
         const decoded = await verifyToken(token);
 
@@ -144,6 +145,6 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          */
-        '/((?!api/auth|_next/static|_next/image|favicon.ico|logo.svg|leftbg.svg|rightbg.svg).*)',
+        '/((?!api/auth|api/isvalidvehicle|_next/static|_next/image|favicon.ico|logo.svg|leftbg.svg|rightbg.svg).*)',
     ],
 };

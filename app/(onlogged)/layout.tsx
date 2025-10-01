@@ -43,7 +43,7 @@ export default function OnLoggedLayout({
             <button
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="fixed hover:bg-white/20 top-4 left-4 z-50 p-3 text-white rounded shadow-lg cursor-pointer"
-                style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
+                style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%)" }}
             >
 
                 <Menu className="w-6 h-6" />
@@ -54,7 +54,7 @@ export default function OnLoggedLayout({
                 className={`fixed top-0 left-0 h-screen text-white z-50
                     transition-transform duration-300 transform
                     ${isOpen ? "translate-x-0 w-64" : "-translate-x-full w-64"}`}
-                style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%);" }}
+                style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%)" }}
             >
 
                 <div className="flex flex-col h-full">
@@ -69,7 +69,7 @@ export default function OnLoggedLayout({
                                 className="pr-5"
                             >
 
-                                <X className="w-6 h-6 text-black cursor-pointer hover:text-red-400" />
+                                <X className="w-6 h-6 text-white cursor-pointer hover:text-red-400" />
                             </button>
                         </div>
 

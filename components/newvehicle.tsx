@@ -1,6 +1,5 @@
 'use client'
 import { Veiculo } from "@/lib/database";
-import { verifyToken } from "@/lib/jwt/jwt";
 import { setVehicle } from "@/lib/repos/vehicle";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -69,6 +68,7 @@ export default function NewVehicle() {
                     modelo,
                     cor,
                     placa: placa.toUpperCase().trim().replaceAll(" ", ""),
+                    status: 'P'
                 };
 
                 const setvehicle = await setVehicle(veiculo);
@@ -83,8 +83,7 @@ export default function NewVehicle() {
                 setModelo("");
                 setCor("");
                 setPlaca("");
-                router.refresh()
-
+                window.location.reload();
             } catch (err: any) {
                 toast.error(err.message, {
                     style: {

@@ -57,7 +57,7 @@ export default function ContainerVehicle() {
     return (
         <div>
             {vehicles.map((veiculo: any) => (
-                <CardVehicle veiculo={veiculo} />
+                <CardVehicle veiculo={veiculo} key={veiculo.usuarioveiculo_id} />
             ))}
         </div>
     )
