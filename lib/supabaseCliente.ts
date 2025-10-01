@@ -97,6 +97,8 @@ export const supabaseDb: DatabaseClient = {
                 dtnasc: dtnasciso,
                 cpf: user.cpf,
                 password: hashedPassword,
+                criacao_token: "sistema",
+                criacao_data: now,
                 alteracao_token: "sistema",
                 alteracao_data: now,
             })
@@ -106,7 +108,7 @@ export const supabaseDb: DatabaseClient = {
         if (error) throw new Error("Houve um erro ao criar usuário.")
 
         const { error: errorvalid } = await supabase
-            .from("usuariovalidacao")
+            .from("filavalidacaousuario")
             .upsert({
                 usuario_id: data.usuario_id,
                 criacao_token: "sistema",
@@ -164,33 +166,39 @@ export const supabaseDb: DatabaseClient = {
     },
     GetPendingUsers: async (): Promise<Partial<Usuario>[] | null> => {
         const { data, error } = await supabase
-            .from('usuario')
+            .from('filavalidacaousuario')
             .select(`
-                usuario_id,
-                nome,
-                realm,
-                email,
-                dtnasc,
-                phone,
-                cpf,
-                criacao_data
-            `).eq('status', 'P')
+                filavalidacaousuario_id,
+                status,
+                usuario:usuario_id (
+                    usuario_id,
+                    nome,
+                    realm,
+                    email,
+                    dtnasc,
+                    phone,
+                    cpf,
+                    criacao_data,
+                    status
+                )
+            `)
+            .eq('status', 'A')
             .order('criacao_data', { ascending: false });
 
         if (error) throw new Error(error.message);
-
         if (!data || data.length === 0) return null;
 
-        // Mapeia os registros corretamente no formato do Veiculo
-        return data.map((row: any) => ({
-            usuario_id: row.usuario_id,
-            nome: row.nome,
-            realm: row.realm,
-            email: row.email,
-            dtnasc: row.dtnasc,
-            phone: row.phone,
-            cpf: row.cpf,
-            criacao_data: row.criacao_data,
+        const filteredData = data.filter((row: any) => row.usuario && row.usuario.status === 'P');
+
+        return filteredData.map((row: any) => ({
+            usuario_id: row.usuario.usuario_id,
+            nome: row.usuario.nome,
+            realm: row.usuario.realm,
+            email: row.usuario.email,
+            dtnasc: row.usuario.dtnasc,
+            phone: row.usuario.phone,
+            cpf: row.usuario.cpf,
+            criacao_data: row.usuario.criacao_data,
         }));
     },
     SetUpdateVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null> => {
@@ -275,8 +283,6 @@ export const supabaseDb: DatabaseClient = {
             .eq("status", "A")
             .eq('usuario.status', 'A')
             .maybeSingle();
-
-            console.log(veiculo.placa)
 
         if (error) {
             throw new Error(`Erro ao consultar veículo: ${error.message}`);
@@ -365,7 +371,6 @@ export const supabaseDb: DatabaseClient = {
             .select("placa, criacao_data")
             .in("placa", placas);
 
-        console.log(placas)
         if (logsError) throw new Error(logsError.message);
 
         const logsByPlaca = new Map<string, any>();
@@ -398,7 +403,7 @@ export const supabaseDb: DatabaseClient = {
     },
     GetLogVehicle: async (placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null> => {
 
-        if(!placa){
+        if (!placa) {
 
             throw new Error("Parâmetros insuficientes");
         }

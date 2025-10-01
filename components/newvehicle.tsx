@@ -102,22 +102,31 @@ export default function NewVehicle() {
         })
     };
 
-    const formatarPlaca = (valor: string) => {
-        // Remove tudo que não for letra ou número
-        valor = valor.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    function formatarPlacaInput(value: string) {
+        
+        let placa = value.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
-        // Antigo: AAA1234
-        if (/^[A-Z]{3}[0-9]{4}$/.test(valor)) {
-            return valor.replace(/^([A-Z]{3})([0-9]{4})$/, "$1 $2");
+        let resultado = "";
+
+        for (let i = 0; i < placa.length; i++) {
+            if (i < 3) {
+                if (/[A-Z]/.test(placa[i])) resultado += placa[i];
+            } else if (i === 3) {
+                resultado += " ";
+                if (/[0-9]/.test(placa[i])) resultado += placa[i];
+            } else if (i === 4) {
+                if (/[A-Z]/.test(placa[i]) || /[0-9]/.test(placa[i])) resultado += placa[i];
+            } else if (i === 5) {
+                if (/[0-9]/.test(placa[i])) resultado += placa[i];
+            } else if (i === 6) {
+                if (/[0-9]/.test(placa[i])) resultado += placa[i];
+            }
         }
 
-        // Mercosul: AAA1A23
-        if (/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/.test(valor)) {
-            return valor.replace(/^([A-Z]{3})([0-9][A-Z][0-9]{2})$/, "$1 $2");
-        }
+        if (resultado.length > 8) resultado = resultado.slice(0, 8);
 
-        return valor;
-    };
+        return resultado;
+    }
 
     return (
         <div className="flex flex-col items-center md:flex-row md:flex-wrap md:items-start md:justify-between gap-5">
@@ -170,9 +179,9 @@ export default function NewVehicle() {
                 <input
                     id="placa"
                     type="text"
-                    maxLength={8} // AAA 1234
+                    maxLength={8}
                     value={placa}
-                    onChange={(e) => setPlaca(formatarPlaca(e.target.value))}
+                    onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
                     className="mb-3 text-sm px-4 py-2 border rounded w-full"
                     required
                 />

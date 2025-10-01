@@ -26,8 +26,7 @@ export default function ContainerVehicle() {
             })
 
             const data = await res.json()
-
-            if (!res.ok) throw new Error(data.erro || 'Erro de autenticação, entre em contato com o suporte.')
+            if (!res.ok) throw new Error(data.erro || 'Houve um erro ao informações do usuário, entre em contato com o suporte.')
 
             const { realm, usuario_id } = data ?? {}
 

@@ -2,6 +2,7 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 
 export default function OnLoggedLayout({
     children,
@@ -10,8 +11,48 @@ export default function OnLoggedLayout({
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const asideRef = useRef<HTMLDivElement>(null);
+    const [realm, setRealm] = useState("morador")
+    const [user, setUser] = useState("")
 
-    // Fecha o menu ao clicar fora
+    useEffect(() => {
+        const fetchRealm = async () => {
+            try {
+                const res = await fetch('/api/me', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.erro || 'Houve um erro ao buscar informações do usuário, entre em contato com o suporte.');
+                }
+
+                const realmArray = (() => {
+                    try {
+                        return JSON.parse(data.realm.replace(/'/g, '"'));
+                    } catch {
+                        return data.realm.replace(/^\[|\]$/g, "").split(",").map((r: string) => r.trim());
+                    }
+                })();
+
+                setRealm(realmArray);
+                setUser(data.nome);
+            } catch (err: any) {
+                toast.error(err.message, {
+                    style: {
+                        borderRadius: "10px",
+                        background: "#333",
+                        color: "#fff",
+                    },
+                    duration: 2000,
+                });
+            }
+        };
+
+        fetchRealm();
+    }, [])
+
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (asideRef.current && !asideRef.current.contains(event.target as Node)) {
@@ -59,6 +100,11 @@ export default function OnLoggedLayout({
 
                 <div className="flex flex-col h-full">
                     <nav className="flex flex-col mt-4">
+
+                        <div className="rounded bg-white py-1 mb-6 float-right flex items-center justify-between px-4">
+                            <h5 className="text-black">Bem vindo {user ? <b className="text-[var(--primary)]"> {user} </b> : ""}</h5>
+                        </div>
+
                         <div className="rounded mb-6 float-right  cursor-pointer flex items-center justify-between">
                             <Link
                                 onClick={() => setIsOpen(false)} href="/" className="w-30">
@@ -73,6 +119,7 @@ export default function OnLoggedLayout({
                             </button>
                         </div>
 
+
                         <Link
                             onClick={() => setIsOpen(false)} href="/mypage" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
                             Minhas informações
@@ -81,14 +128,24 @@ export default function OnLoggedLayout({
                             onClick={() => setIsOpen(false)} href="/vehicles" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
                             Meus veículos
                         </Link>
-                        <Link
-                            onClick={() => setIsOpen(false)} href="/validvehicle" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
-                            Validar veículo
-                        </Link>
-                        <Link
-                            onClick={() => setIsOpen(false)} href="/validuser" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
-                            Validar Usuários
-                        </Link>
+                        {["admin", "gerente"].some(r => (Array.isArray(realm) ? realm : [realm]).includes(r)) && (
+                            <>
+                                <Link
+                                    onClick={() => setIsOpen(false)}
+                                    href="/validvehicle"
+                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                                >
+                                    Validar veículo
+                                </Link>
+                                <Link
+                                    onClick={() => setIsOpen(false)}
+                                    href="/validuser"
+                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                                >
+                                    Validar Usuários
+                                </Link>
+                            </>
+                        )}
                     </nav>
                     <div className="mt-auto flex justify-center items-center my-6">
                         <button

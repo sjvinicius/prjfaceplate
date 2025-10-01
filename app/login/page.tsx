@@ -56,9 +56,7 @@ export default function Login() {
 
             const data = await res.json();
 
-            if (!res.ok) throw new Error(data.erro || 'Erro de autenticação, entre em contato com o suporte.');
-
-            const { realm } = data.user
+            if (!res.ok) throw new Error(data.error || 'Erro de autenticação, entre em contato com o suporte.');
 
             const params = new URLSearchParams(window.location.search);
             const redirectTo = params.get('redirect') || redirect;

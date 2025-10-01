@@ -9,10 +9,6 @@ interface Route {
 let routes: { morador: Route[]; gerente: Route[], admin: Route[] } = {
     morador: [
         {
-            path: "/",
-            whenauth: "redirect"
-        },
-        {
             path: "/validuser",
             whenauth: "redirect"
         },
@@ -25,25 +21,14 @@ let routes: { morador: Route[]; gerente: Route[], admin: Route[] } = {
     admin: []
 };
 
-routes.gerente = [...routes.morador];
-
-routes.gerente.push(
-    {
-        path: "/dashboard",
-        whenauth: "redirect"
-    },
-    {
-        path: "/consultapalete",
-        whenauth: "redirect"
-    }
-);
+routes.admin = [...routes.gerente]
 
 export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
     const fallbackUrl = 'https://faceplate.vercel.app';
 
     const token = req.cookies.get('nextauthprjfaceplate-token')?.value;
-    
+
     const redirectUrl = new URL('/login', req.url);
     // const redirectUrl = new URL('/?redirect=' + encodeURIComponent(pathname), req.url);
 
@@ -59,7 +44,6 @@ export async function middleware(req: NextRequest) {
                 ? NextResponse.json({ error: 'Requisição não autorizada.' }, { status: 401 })
                 : (req.nextUrl.pathname == "/" || req.nextUrl.pathname == "/login" || req.nextUrl.pathname == "/signin" ? NextResponse.next() : NextResponse.redirect(redirectUrl));
         }
-        console.log(token)
 
         const decoded = await verifyToken(token);
 
@@ -91,38 +75,44 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL(redirect, req.url));
         }
 
+        let realmArray: string[] = [];
         type realmKey = "morador" | "gerente" | "admin";
         type AliasKey = keyof typeof routes;
-
         const realm_alias: Record<realmKey, AliasKey> = {
             gerente: "gerente",
             morador: "morador",
             admin: "admin"
         };
 
-        if (!Object.keys(realm_alias).includes(realm as realmKey)) {
-            return NextResponse.json(
-                { error: "Requisição não autorizada." },
-                { status: 401 }
-            );
+        try {
+            realmArray = JSON.parse(realm.replace(/'/g, '"'));
+        } catch {
+            realmArray = realm.replace(/^\[|\]$/g, "").split(",").map(r => r.trim());
         }
 
-        const alias: AliasKey = realm_alias[realm as keyof typeof realm_alias];
+        let mainRole: realmKey = "morador"; // padrão
+        if (realmArray.includes("admin")) mainRole = "admin";
+        else if (realmArray.includes("gerente")) mainRole = "gerente";
 
-        const findroute = routes[alias].find(route => route.path === pathname);
+        const alias: AliasKey = realm_alias[mainRole];
 
-        if (!findroute) {
-            return NextResponse.json({ error: "Rota não encontrada." }, { status: 404 });
+        const findroute = routes[alias].find(route => route.path === pathname && route.path == "redirect");
+
+        if (findroute) {
+            // return NextResponse.json({ error: "Acesso negado." }, { status: 403 });
+            return NextResponse.redirect(new URL("/vehicles", req.url));
         }
 
-        if (pathname.startsWith('/crud')) {
-
+        if (pathname.startsWith('/crud') && mainRole !== "admin") {
             return NextResponse.json({ error: "Acesso negado. Apenas admins podem criar usuários." }, { status: 403 });
         }
 
-        const response = NextResponse.next();
+        if (pathname == "/") {
+            let redirect = mainRole === "admin" ? "/validvehicle" : mainRole === "gerente" ? "/validvehicle" : "/vehicles";
+            return NextResponse.redirect(new URL(redirect, req.url));
+        }
 
-        return response;
+        return NextResponse.next();
     } catch (err: any) {
 
         const message =
@@ -145,6 +135,6 @@ export const config = {
          * - _next/image (image optimization files)
          * - favicon.ico (favicon file)
          */
-        '/((?!api/auth|api/isvalidvehicle|_next/static|_next/image|favicon.ico|logo.svg|leftbg.svg|rightbg.svg).*)',
+        '/((?!/|api/auth|_next/static|_next/image|favicon.ico|logo.svg|leftbg.svg|rightbg.svg).*)',
     ],
 };

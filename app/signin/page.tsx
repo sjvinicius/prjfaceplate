@@ -2,7 +2,6 @@
 
 import { SetUser } from "@/lib/repos/user";
 import Link from "next/link";
-import router from "next/router";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -100,8 +99,8 @@ export default function SignIn() {
             setDtnasc("")
             setPassword("")
             setConfirmPassword("")
-
-            router.push("/login");
+            
+            window.location.replace("/login");
 
         } catch (err: any) {
             toast.error(err.message, {
