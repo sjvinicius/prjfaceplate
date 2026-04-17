@@ -51,5 +51,6 @@ export interface DatabaseClient {
     SetLogVehicle(logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean }>;
     SetVehicle(veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | { error: string }>;
     GetVehicles(usuario_id: string | number): Promise<Partial<Veiculo>[] | null>;
+    GetAllVehicles(): Promise<string[]>;
     GetLogVehicle(placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null>;
 }

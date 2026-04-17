@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Projeto Next.js – Guia de Execução
 
-## Getting Started
+Este projeto foi desenvolvido utilizando o **Next.js**, um framework React moderno para construção de aplicações web.
 
-First, run the development server:
+Este guia foi feito para ajudar você a executar o projeto localmente de forma simples.
+
+---
+
+## 📋 Pré-requisitos
+
+Antes de começar, você precisa ter instalado:
+
+* **Node.js (versão 18 ou superior recomendada)**
+* Um gerenciador de pacotes:
+
+  * npm (já vem com o Node)
+  * ou yarn / pnpm / bun
+
+Para verificar se está tudo instalado corretamente:
+
+```bash
+node -v
+npm -v
+```
+
+---
+
+## ▶️ Como executar o projeto
+
+### 1. Instalar as dependências
+
+No terminal, dentro da pasta do projeto, execute:
+
+```bash
+npm install
+```
+
+Ou, se preferir:
+
+```bash
+yarn install
+# ou
+pnpm install
+# ou
+bun install
+```
+
+---
+
+### 2. Iniciar o servidor de desenvolvimento
+
+Execute um dos comandos:
 
 ```bash
 npm run dev
-# or
+```
+
+Ou:
+
+```bash
 yarn dev
-# or
+# ou
 pnpm dev
-# or
+# ou
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌐 Acessando a aplicação
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Após iniciar o servidor, abra o navegador e acesse:
 
-## Learn More
+```id="url-local"
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tecnologias utilizadas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* Next.js
+* React
+* TypeScript
+* next/font (otimização de fontes)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📦 Build para produção
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Se quiser gerar a versão de produção:
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## ❗ Problemas comuns
+
+### 🔸 "node não reconhecido"
+
+Verifique se o Node.js está instalado e no PATH.
+
+### 🔸 Erro ao instalar dependências
+
+Tente limpar o cache e reinstalar:
+
+```bash
+npm cache clean --force
+npm install
+```
+
+### 🔸 Porta já em uso
+
+Se a porta 3000 estiver ocupada, o Next.js irá sugerir outra automaticamente.
+
+---
+
+## 💡 Observação
+
+Este projeto roda em modo de desenvolvimento com `npm run dev`.
+Para uso real (produção), utilize `npm run build` + `npm start`.
+
+---
+
+Se tiver dúvidas, siga os passos com calma ou peça ajuda ao responsável pelo projeto 🙂

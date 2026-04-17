@@ -1,7 +1,6 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
 import { DatabaseClient, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
-import { GetUserByEmail } from './repos/user';
 import bcrypt from "bcryptjs"
 
 const supabase = createClient(
@@ -13,16 +12,6 @@ const supabase = createClient(
         }
     }
 );
-
-interface UsuarioV {
-    status: string;
-}
-
-interface UsuarioVeiculo {
-    usuarioveiculo_id: number;
-    placa: string;
-    usuario: UsuarioV | null; // null caso não exista
-}
 
 export const supabaseDb: DatabaseClient = {
 
@@ -301,7 +290,7 @@ export const supabaseDb: DatabaseClient = {
             throw new Error("Parâmetros insuficientes.");
         }
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('logusuarioveiculo')
             .insert(logusuarioveiculo)
 
@@ -400,6 +389,18 @@ export const supabaseDb: DatabaseClient = {
             }
         }));
 
+    },
+    GetAllVehicles: async (): Promise<string[]> => {
+        const { data, error } = await supabase
+            .from("usuarioveiculo")
+            .select("placa")
+            .eq("status", "A");
+
+        if (error) throw new Error(error.message);
+
+        return (data ?? [])
+            .map(v => v.placa)
+            .filter(Boolean);
     },
     GetLogVehicle: async (placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null> => {
 

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs"
 import { generateToken } from "@/lib/jwt/jwt";
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 export async function POST(req: NextRequest) {
 
@@ -31,13 +30,14 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Credenciais incorretas." }, { status: 404 })
     }
 
-    const token = await generateToken({ email: String(user.email), realm: String(user.realm), nome: String(user.nome), usuario_id: user.usuario_id ,lojacliente_id: 1 });
+    const token = await generateToken({ email: String(user.email), realm: String(user.realm), nome: String(user.nome), usuario_id: user.usuario_id, lojacliente_id: 1 });
 
     const response = NextResponse.json({ user: { token, email: String(user.email), realm: String(user.realm), nome: String(user.nome) } }, { status: 200 });
+    const isProduction = process.env.NODE_ENV === "production";
 
     response.cookies.set('nextauthprjfaceplate-token', token, {
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         sameSite: 'strict',
         path: '/',
         maxAge: 60 * 60 * 4, // 4 horas

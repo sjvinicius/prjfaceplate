@@ -1,9 +1,5 @@
-import { GetUserByEmail } from "@/lib/repos/user";
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/jwt/jwt";
 import { isValidVehicle, setLogVehicle } from "@/lib/repos/vehicle";
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY as string;
 
 export async function POST(req: NextRequest) {
 

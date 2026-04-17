@@ -1,6 +1,6 @@
 "use server"
 import { revalidatePath } from "next/cache";
-import { LogUsuarioVeiculo, Usuario, Veiculo } from "../database";
+import { LogUsuarioVeiculo, Veiculo } from "../database";
 import { getDb } from "../db";
 
 export async function GetPendingVehicle(): Promise<Partial<Veiculo>[] | null> {
@@ -52,6 +52,13 @@ export async function setVehicle(veiculo: Partial<Veiculo>) {
 export async function getVehicles(usuario_id: number | string = "") {
     const db = await getDb();
     const vehicle = await db.GetVehicles(usuario_id);
+
+    return vehicle
+}
+
+export async function GetAllVehicles() {
+    const db = await getDb();
+    const vehicle = await db.GetAllVehicles();
 
     return vehicle
 }

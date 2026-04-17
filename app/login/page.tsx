@@ -3,7 +3,8 @@ import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function Login() {
 
@@ -36,16 +37,13 @@ export default function Login() {
     const handleLogin = async () => {
         setLoading(true);
 
-        let toastId: string | null = null
+        let toastId: string | null = null;
 
         try {
-
-            let redirect = "/vehicles"
-
             toastId = toast.loading("Buscando histórico...");
 
             if (!email || !pwd) {
-                throw new Error("Preencha corretamente os campos.")
+                throw new Error("Preencha corretamente os campos.");
             }
 
             const res = await fetch('/api/auth', {
@@ -56,12 +54,16 @@ export default function Login() {
 
             const data = await res.json();
 
-            if (!res.ok) throw new Error(data.error || 'Erro de autenticação, entre em contato com o suporte.');
+            if (!res.ok) {
+                throw new Error(data.error || 'Erro de autenticação.');
+            }
 
+            // ✅ pega redirect da URL
             const params = new URLSearchParams(window.location.search);
-            const redirectTo = params.get('redirect') || redirect;
+            const redirectTo = params.get('redirect') || "/vehicles";
 
             window.location.href = redirectTo;
+
         } catch (err: any) {
             toast.error(err.message, {
                 style: {
@@ -76,12 +78,10 @@ export default function Login() {
             setLoading(false);
 
             if (toastId) {
-
                 toast.dismiss(toastId);
             }
         }
     };
-
     return (
         <>
             {/* <img src="/leftbg.svg" style={{ position: "absolute", height: "100vh", left: 0 }}></img>
@@ -99,7 +99,7 @@ export default function Login() {
                     <div className="flex flex-col gap-1 w-full items-center justify-center">
 
                         <div className="flex flex-col text-center justify-center items-center mb-5">
-                            <img src="/logo.svg" />
+                            <Image width={150} height={150} src="/logo.svg" alt="logo faceplate" />
                             <p className="text-sm">Tecnologia e proteção para sua casa, em um só lugar.</p>
                         </div>
 
