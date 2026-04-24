@@ -29,11 +29,7 @@ export default function RootLayout({
   params
 }: Readonly<{
   children: React.ReactNode;
-  params?: { slug?: string[] };
 }>) {
-
-  const pathname = "/" + (params?.slug?.join("/") ?? "");
-  const asideWidth = pathname === "/" || pathname === "/login" ? "w-10" : "w-16";
 
   return (
     <html lang="en">
@@ -75,7 +71,7 @@ export default function RootLayout({
           {children}
         </div>
 
-        <div className={`asideright fixed right-0 top-0 h-screen ${asideWidth} flex flex-col`}>
+        <div className={`asideright fixed right-0 top-0 h-screen w-16 flex flex-col`}>
           <div className="clip-path-bottom bg-[var(--secondary)]" style={{ flex: "1.5" }}>
             <div className="aside-hover">Cinza</div>
           </div>
