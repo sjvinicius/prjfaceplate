@@ -3,8 +3,6 @@ import { useState } from "react"
 
 export default function ValidUser() {
 
-    const [isloading, SetIsLoading] = useState(false)
-
     return (
         <div className="flex flex-col items-center min-h-screen">
             <div className="w-full pt-20 max-w-7xl flex flex-col h-full rounded-md py-6 bg-[var(--background)] gap-10 min-h-screen">
