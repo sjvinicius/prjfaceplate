@@ -105,15 +105,10 @@ export default function ForgotPassword() {
 
                     <button
                         // onClick={handleLogin}
-                        disabled={isloading}
                         className="text-sm w-30 px-4 py-2 cursor-pointer text-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500 flex items-center gap-2 disabled:opacity-50"
                     >
-                        {isloading ? 'Registrando...' : (
-                            <>
-                                Registrar
-                                <LogIn size={18} />
-                            </>
-                        )}
+                        Registrar
+                        <LogIn size={18} />
                     </button>
                 </div>
                 <p className="text-xs" style={{ marginTop: "auto" }}>Lembrou ? <strong><Link href="/login">Acesse</Link></strong></p>
