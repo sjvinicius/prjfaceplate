@@ -218,25 +218,28 @@ export const supabaseDb: DatabaseClient = {
 
         const rows = data as RawVehicleRow[]
     
-        return rows.map((row) => ({
+        return rows.map((row) => {
             if (!row.usuario) {
                 throw new Error("Usuário não encontrado para veículo.");
             }
-            usuarioveiculo_id: row.usuarioveiculo_id,
-            marca: row.marca,
-            modelo: row.modelo,
-            placa: row.placa,
-            status: row.status,
-            usuario_id: {
-                usuario_id: row.usuario?.usuario_id,
-                nome: row.usuario?.nome,
-                realm: row.usuario?.realm,
-                email: row.usuario?.email,
-                dtnasc: row.usuario?.dtnasc,
-                phone: row.usuario?.phone,
-                cpf: row.usuario?.cpf,
+        
+            return {
+                usuarioveiculo_id: row.usuarioveiculo_id,
+                marca: row.marca,
+                modelo: row.modelo,
+                placa: row.placa,
+                status: row.status,
+                usuario_id: {
+                    usuario_id: row.usuario.usuario_id,
+                    nome: row.usuario.nome,
+                    realm: row.usuario.realm,
+                    email: row.usuario.email,
+                    dtnasc: row.usuario.dtnasc,
+                    phone: row.usuario.phone,
+                    cpf: row.usuario.cpf,
+                }
             }
-        }));
+        })
     },
     GetPendingUsers: async (): Promise<Partial<Usuario>[] | null> => {
         const { data, error } = await supabase
