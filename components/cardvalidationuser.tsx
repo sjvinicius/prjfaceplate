@@ -13,8 +13,12 @@ export default function CardValidacaoUser({ usuario }: { usuario: Partial<Usuari
             try {
                 await aprovarusuario(Number(usuario_id))
                 toast.success("Usuário aprovado!")
-            } catch (err: any) {
+            } catch (err) {
+              if (err instanceof Error) {
+                toast.error(err.message)
+              } else {
                 toast.error("Erro ao aprovar usuário")
+              }
             }
         })
     }
@@ -24,8 +28,12 @@ export default function CardValidacaoUser({ usuario }: { usuario: Partial<Usuari
             try {
                 await reprovarusuario(Number(usuario_id))
                 toast.success("Usuário reprovado!")
-            } catch (err: any) {
+            } catch (err) {
+              if (err instanceof Error) {
+                toast.error(err.message)
+              } else {
                 toast.error("Erro ao reprovar usuário")
+              }
             }
         })
     }
