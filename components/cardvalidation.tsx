@@ -3,6 +3,7 @@
 import { aprovarVeiculo, reprovarVeiculo } from "@/lib/repos/vehicle"
 import { useTransition } from "react"
 import toast from "react-hot-toast"
+import type { PendingVehicle } from "@/lib/supabaseCliente"
 
 export default function CardValidacao({ veiculo }: { veiculo: PendingVehicle }) {
     const [isPending, startTransition] = useTransition()
