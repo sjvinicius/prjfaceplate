@@ -48,8 +48,16 @@ export default function ContainerVehicle() {
             if (!vehiclesData?.length) {
                 throw new Error("Nenhum veículo encontrado.")
             }
-
-            setVehicles(vehiclesData)
+            
+            const normalized: Vehicle[] = vehiclesData
+              .filter((v) => v.usuarioveiculo_id !== undefined)
+              .map((v) => ({
+                usuarioveiculo_id: String(v.usuarioveiculo_id),
+                placa: v.placa ?? "",
+                modelo: v.modelo ?? "",
+              }))
+            
+            setVehicles(normalized)
         } catch (error) {
             const err = error as Error
             toast.error(err.message || 'Ocorreu um erro inesperado.')
