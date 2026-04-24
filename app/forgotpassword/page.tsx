@@ -4,12 +4,12 @@ import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image"
 
 export default function ForgotPassword() {
 
     const [newpwd, setNewpwd] = useState('')
     const [confirmpwd, setConfirmpwd] = useState('')
-    const [isloading, setLoading] = useState(false);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -30,7 +30,12 @@ export default function ForgotPassword() {
                 <div className="flex flex-col gap-1 w-full items-center">
 
                     <div className="flex flex-col text-center justify-center items-center mb-5">
-                        <img src="/logo.svg" />
+                        <Image
+                          src="/image.png"
+                          alt="logo"
+                          width={500}
+                          height={300}
+                        />
                         <p className="text-sm">Tecnologia e proteção para sua casa, em um só lugar.</p>
                     </div>
 
