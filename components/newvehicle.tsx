@@ -102,7 +102,7 @@ export default function NewVehicle() {
     }
 
     function formatarPlacaInput(value: string) {
-        let placa = value.toUpperCase().replace(/[^A-Z0-9]/g, "")
+        const placa = value.toUpperCase().replace(/[^A-Z0-9]/g, "")
         let resultado = ""
 
         for (let i = 0; i < placa.length; i++) {
