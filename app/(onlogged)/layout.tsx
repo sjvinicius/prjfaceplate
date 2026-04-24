@@ -3,6 +3,13 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image"
+
+type MeResponse = {
+    nome: string
+    realm: string
+    erro?: string
+}
 
 export default function OnLoggedLayout({
     children,
@@ -11,7 +18,7 @@ export default function OnLoggedLayout({
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const asideRef = useRef<HTMLDivElement>(null);
-    const [realm, setRealm] = useState("morador")
+    const [realm, setRealm] = useState<string[]>(["morador"])
     const [user, setUser] = useState("")
 
     useEffect(() => {
@@ -21,33 +28,42 @@ export default function OnLoggedLayout({
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
-
-                const data = await res.json();
+                                
+                const data: MeResponse = await res.json()
 
                 if (!res.ok) {
                     throw new Error(data.erro || 'Houve um erro ao buscar informações do usuário, entre em contato com o suporte.');
                 }
 
-                const realmArray = (() => {
+                const realmArray: string[] = (() => {
                     try {
-                        return JSON.parse(data.realm.replace(/'/g, '"'));
+                        return JSON.parse(data.realm.replace(/'/g, '"'))
                     } catch {
-                        return data.realm.replace(/^\[|\]$/g, "").split(",").map((r: string) => r.trim());
+                        return data.realm
+                            .replace(/^\[|\]$/g, "")
+                            .split(",")
+                            .map((r: string) => r.trim())
                     }
-                })();
+                })()
 
                 setRealm(realmArray);
                 setUser(data.nome);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err: any) {
-                toast.error(err.message, {
-                    style: {
-                        borderRadius: "10px",
-                        background: "#333",
-                        color: "#fff",
-                    },
-                    duration: 2000,
-                });
+            } catch (err) {
+                if (err instanceof Error) {
+                    toast.error(err.message, {
+                        style: {
+                            borderRadius: "10px",
+                            background: "#333",
+                            color: "#fff",
+                        },
+                        duration: 2000,
+                    });
+                } else {
+                    toast.error("Erro inesperado", {
+                        duration: 2000,
+                    });
+                }
             }
         };
 
@@ -106,10 +122,16 @@ export default function OnLoggedLayout({
                             <h5 className="text-black">Bem vindo {user ? <b className="text-[var(--primary)]"> {user} </b> : ""}</h5>
                         </div>
 
-                        <div className="rounded mb-6 float-right  cursor-pointer flex items-center justify-between">
+                        <div className="rounded mb-6 float-right cursor-pointer flex items-center justify-between">
                             <Link
                                 onClick={() => setIsOpen(false)} href="/" className="w-30">
-                                <img src="/logo.svg" />
+                                <Image
+                                    src="/logo.svg"
+                                    alt="Logo"
+                                    width={120}
+                                    height={40}
+                                    priority
+                                />
                             </Link>
                             <button
                                 onClick={() => setIsOpen(false)}
@@ -129,24 +151,25 @@ export default function OnLoggedLayout({
                             onClick={() => setIsOpen(false)} href="/vehicles" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
                             Meus veículos
                         </Link>
-                        {["admin", "gerente"].some(r => (Array.isArray(realm) ? realm : [realm]).includes(r)) && (
-                            <>
-                                <Link
-                                    onClick={() => setIsOpen(false)}
-                                    href="/validvehicle"
-                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
-                                >
-                                    Validar veículo
-                                </Link>
-                                <Link
-                                    onClick={() => setIsOpen(false)}
-                                    href="/validuser"
-                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
-                                >
-                                    Validar Usuários
-                                </Link>
-                            </>
-                        )}
+                        {["admin", "gerente"].some(r => realm.includes(r)) && (
+                        <>
+                            <Link
+                                onClick={() => setIsOpen(false)}
+                                href="/validvehicle"
+                                className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                            >
+                                Validar veículo
+                            </Link>
+                    
+                            <Link
+                                onClick={() => setIsOpen(false)}
+                                href="/validuser"
+                                className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                            >
+                                Validar Usuários
+                            </Link>
+                        </>
+                    )}
                     </nav>
                     <div className="mt-auto flex justify-center items-center my-6">
                         <button
