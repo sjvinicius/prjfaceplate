@@ -472,8 +472,7 @@ export const supabaseDb: DatabaseClient = {
             .map(v => v.placa)
             .filter(Boolean);
     },
-   GetLogVehicle: async (placa: string | number): Promise<LogUsuarioVeiculo[] | null> => {
-    
+   GetLogVehicle: async (placa: string | number): Promise<VehicleLog[]> => {
         if (!placa) {
             throw new Error("Parâmetros insuficientes")
         }
@@ -485,6 +484,9 @@ export const supabaseDb: DatabaseClient = {
     
         if (error) throw new Error(error.message)
     
-        return data as LogUsuarioVeiculo[]
+        return (data ?? []).map((item) => ({
+            status: item.status ?? "A",
+            criacao_data: item.criacao_data
+        }))
     }
 }
