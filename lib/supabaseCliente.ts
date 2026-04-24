@@ -219,6 +219,9 @@ export const supabaseDb: DatabaseClient = {
         const rows = data as RawVehicleRow[]
     
         return rows.map((row) => ({
+            if (!row.usuario) {
+                throw new Error("Usuário não encontrado para veículo.");
+            }
             usuarioveiculo_id: row.usuarioveiculo_id,
             marca: row.marca,
             modelo: row.modelo,
