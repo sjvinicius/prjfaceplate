@@ -3,7 +3,8 @@
 import { SetUser } from "@/lib/repos/user";
 import Link from "next/link";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import Image from "next/image"
 
 export default function SignIn() {
 
@@ -101,7 +102,7 @@ export default function SignIn() {
             setConfirmPassword("")
             
             window.location.replace("/login");
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             toast.error(err.message, {
                 style: {
@@ -126,9 +127,7 @@ export default function SignIn() {
 
     return (
         <>
-            {/* <img src="/leftbg.svg" style={{ position: "absolute", height: "100vh", left: 0 }}></img>
-            <img src="/rightbg.svg" style={{ position: "absolute", height: "100vh", right: 0 }}></img> */}
-
+            {
             <div className="flex flex-col items-center h-screen py-5 px-3">
 
                 <div
@@ -141,7 +140,12 @@ export default function SignIn() {
                     <div className="flex flex-col gap-1 w-full items-center justify-around">
 
                         <div className="flex flex-col text-center justify-center items-center mb-5">
-                            <img src="/logo.svg" />
+                            <Image
+                              src="/logo.svg"
+                              alt="Logo"
+                              width={120}
+                              height={120}
+                            />
                             <p className="text-sm">Tecnologia e proteção para sua casa, em um só lugar.</p>
                         </div>
 
