@@ -42,7 +42,7 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
                     throw new Error("Placa inválida.")
                 }
 
-                const reconst reslogs = await getLogVehicle(veiculo.placa)
+                const reslogs = await getLogVehicle(veiculo.placa)
                 
                 setLogs(reslogs ?? [])
             } catch (err) {
