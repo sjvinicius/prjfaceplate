@@ -41,10 +41,14 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
                 if (!veiculo.placa) {
                     throw new Error("Placa inválida.")
                 }
-
                 const reslogs = await getLogVehicle(veiculo.placa)
                 
-                setLogs(reslogs ?? [])
+                setLogs(
+                  (reslogs ?? []).map((l) => ({
+                    status: l.status ?? "A",
+                    criacao_data: l.criacao_data
+                  }))
+                )
             } catch (err) {
                 if (err instanceof Error) {
                     toast.error(err.message)
