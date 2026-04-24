@@ -16,21 +16,21 @@ export default async function ValidVehicle() {
 
                 {/* Conteúdo */}
                 <div className="flex flex-col gap-4 h-full overflow-y-auto w-full max-w-6xl mx-auto px-2 sm:px-4">
-                    {
-                        veiculos?.map((v) => (
-                          <CardValidacao key={v.usuarioveiculo_id} veiculo={v} />
-                        ))
-                    ) : (
-                        <p className="mx-auto text-lg sm:text-xl md:text-2xl text-center px-4">
-                            Nenhum veículo pendente de validação.{" "}
-                            <a
-                                className="text-[var(--primary)] cursor-pointer hover:underline"
-                                href="vehicles"
-                            >
-                                Cadastrar Veículo
-                            </a>
-                        </p>
-                    )}
+                  {veiculos?.length ? (
+                    veiculos.map((v) => (
+                      <CardValidacao key={v.usuarioveiculo_id} veiculo={v} />
+                    ))
+                  ) : (
+                    <p className="mx-auto text-lg sm:text-xl md:text-2xl text-center px-4">
+                      Nenhum veículo pendente de validação.{" "}
+                      <a
+                        className="text-[var(--primary)] cursor-pointer hover:underline"
+                        href="vehicles"
+                      >
+                        Cadastrar Veículo
+                      </a>
+                    </p>
+                  )}
                 </div>
             </div>
         </div>
