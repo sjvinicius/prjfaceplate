@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { LogUsuarioVeiculo, Veiculo } from "../database";
 import { getDb } from "../db";
 
-export async function GetPendingVehicle(): Promise<Partial<Veiculo>[] | null> {
+export async function GetPendingVehicle(): Promise<PendingVehicle[] | null> {
 
     const db = await getDb();
     const user = await db.GetPendingVehicle()
