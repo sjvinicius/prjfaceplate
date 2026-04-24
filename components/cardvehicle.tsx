@@ -46,7 +46,7 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
                 setLogs(
                   (reslogs ?? []).map((l) => ({
                     status: l.status ?? "A",
-                    criacao_data: l.criacao_data
+                    criacao_data: l.criacao_data ?? new Date().toISOString()
                   }))
                 )
             } catch (err) {
