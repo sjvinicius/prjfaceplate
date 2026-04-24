@@ -12,6 +12,22 @@ const supabase = createClient(
         }
     }
 );
+export type PendingVehicle = {
+  usuarioveiculo_id: number
+  marca: string
+  modelo: string
+  placa: string
+  status: string
+  usuario_id: {
+    usuario_id: number
+    nome: string
+    realm?: string
+    email?: string
+    dtnasc?: string
+    phone?: string
+    cpf?: string
+  }
+}
 
 type RawVehicleRow = {
     usuarioveiculo_id: number
