@@ -486,7 +486,7 @@ export const supabaseDb: DatabaseClient = {
     
         return (data ?? []).map((item) => ({
             status: item.status ?? "A",
-            criacao_data: item.criacao_data
+            criacao_data: item.criacao_data ?? ""
         }))
     }
 }
