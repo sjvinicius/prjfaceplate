@@ -19,7 +19,6 @@ type MeResponse = {
 export default function ContainerVehicle() {
     
     const [vehicles, setVehicles] = useState<Vehicle[]>([])
-    const [isPending, startTransition] = useTransition()
     const fetchedRef = useRef(false)
 
     const GetVehicles = async () => {
