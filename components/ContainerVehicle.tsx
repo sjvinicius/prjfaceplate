@@ -49,10 +49,7 @@ export default function ContainerVehicle() {
                 throw new Error("Nenhum veículo encontrado.")
             }
 
-            startTransition(() => {
-                setVehicles(vehiclesData)
-            })
-
+            setVehicles(vehiclesData)
         } catch (error) {
             const err = error as Error
             toast.error(err.message || 'Ocorreu um erro inesperado.')
