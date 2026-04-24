@@ -63,7 +63,7 @@ export default function Login() {
             const redirectTo = params.get('redirect') || "/vehicles";
 
             window.location.href = redirectTo;
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             toast.error(err.message, {
                 style: {
