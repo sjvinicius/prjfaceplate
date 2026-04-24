@@ -4,17 +4,7 @@ import { aprovarVeiculo, reprovarVeiculo } from "@/lib/repos/vehicle"
 import { useTransition } from "react"
 import toast from "react-hot-toast"
 
-type Vehicle = {
-  usuarioveiculo_id: number | string
-  placa: string
-  marca: string
-  modelo: string
-  usuario_id?: {
-    nome?: string
-  }
-}
-
-export default function CardValidacao({ veiculo }: { veiculo: Vehicle }) {
+export default function CardValidacao({ veiculo }: { veiculo: PendingVehicle }) {
     const [isPending, startTransition] = useTransition()
 
     function handleAprovar(usuarioveiculo_id: number | string) {
