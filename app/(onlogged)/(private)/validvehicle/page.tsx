@@ -3,7 +3,7 @@
 import CardValidacao from "@/components/cardvalidation"
 import { GetPendingVehicle } from "@/lib/repos/vehicle"
 
-export default async function ValidUser() {
+export default async function ValidVehicle() {
     const veiculos = await GetPendingVehicle()
 
     return (
@@ -16,9 +16,9 @@ export default async function ValidUser() {
 
                 {/* Conteúdo */}
                 <div className="flex flex-col gap-4 h-full overflow-y-auto w-full max-w-6xl mx-auto px-2 sm:px-4">
-                    {veiculos && veiculos.length > 0 ? (
-                        veiculos.map((v) => (
-                            <CardValidacao key={v.usuarioveiculo_id} veiculo={v} />
+                    {
+                        veiculos?.map((v) => (
+                          <CardValidacao key={v.usuarioveiculo_id} veiculo={v} />
                         ))
                     ) : (
                         <p className="mx-auto text-lg sm:text-xl md:text-2xl text-center px-4">
