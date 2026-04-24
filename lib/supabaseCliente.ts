@@ -381,7 +381,7 @@ export const supabaseDb: DatabaseClient = {
 
         return data;
     },
-    GetVehicles: async (usuario_id: string | number = ""): Promise<Partial<Veiculo>[] | null> => {
+    GetVehicles: async (usuario_id: string | number = ""): Promise<Veiculo[] | null> => {
 
         let query = supabase
             .from("usuarioveiculo")
