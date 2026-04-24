@@ -7,8 +7,8 @@ import CardVehicle from "./cardvehicle"
 
 type Vehicle = {
   usuarioveiculo_id: string
-  placa?: string
-  modelo?: string
+  placa: string
+  modelo: string
 }
 
 type MeResponse = {
