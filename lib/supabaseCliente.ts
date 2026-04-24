@@ -61,6 +61,23 @@ type VehicleLog = {
     criacao_data: string
 }
 
+type PendingVehicle = {
+  usuarioveiculo_id: number
+  marca: string
+  modelo: string
+  placa: string
+  status: string
+  usuario_id: {
+    usuario_id: number
+    nome: string
+    realm?: string
+    email?: string
+    dtnasc?: string
+    phone?: string
+    cpf?: string
+  }
+}
+
 export const supabaseDb: DatabaseClient = {
 
     GetUserByEmail: async (email: string): Promise<Usuario | null> => {
@@ -158,7 +175,7 @@ export const supabaseDb: DatabaseClient = {
 
         return data;
     },
-    GetPendingVehicle: async (): Promise<Partial<Veiculo>[] | null> => {
+    GetPendingVehicle: async (): Promise<PendingVehicle[] | null> => {
         const { data, error } = await supabase
             .from('usuarioveiculo')
             .select(`
