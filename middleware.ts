@@ -111,11 +111,17 @@ export async function middleware(req: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch (err: any) {
-    const message =
-      err.name === 'TokenExpiredError'
-        ? 'Token expirado.'
-        : 'Token inválido.';
+  } catch (err: unknown) {
+    let message = 'Token inválido.';
+
+    if (
+      typeof err === 'object' &&
+      err !== null &&
+      'name' in err &&
+      (err as { name: string }).name === 'TokenExpiredError'
+    ) {
+      message = 'Token expirado.';
+    }
 
     return isApiRoute
       ? NextResponse.json({ error: message }, { status: 401 })

@@ -63,16 +63,21 @@ export default function Login() {
             const redirectTo = params.get('redirect') || "/vehicles";
 
             window.location.href = redirectTo;
-
-        } catch (err: any) {
-            toast.error(err.message, {
-                style: {
-                    borderRadius: "10px",
-                    background: "#333",
-                    color: "#fff",
-                },
-                duration: 2000,
-            });
+        } catch (err) {
+            if (err instanceof Error) {
+                toast.error(err.message, {
+                    style: {
+                        borderRadius: "10px",
+                        background: "#333",
+                        color: "#fff",
+                    },
+                    duration: 2000,
+                });
+            } else {
+                toast.error("Erro inesperado", {
+                    duration: 2000,
+                });
+            }
 
         } finally {
             setLoading(false);

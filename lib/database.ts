@@ -1,7 +1,7 @@
 export interface Usuario {
     usuario_id?: number | string;
     nome: string;
-    realm: string;
+    realm: string[];
     email: string;
     dtnasc: string;
     phone: string;

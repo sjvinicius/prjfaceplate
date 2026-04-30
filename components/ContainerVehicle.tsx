@@ -4,33 +4,41 @@ import { getVehicles } from "@/lib/repos/vehicle"
 import { useTransition, useState, useEffect, useRef } from "react"
 import toast from "react-hot-toast"
 import CardVehicle from "./cardvehicle"
+  import type { PendingVehicle } from "../lib/supabaseCliente"
+
+type Vehicle = {
+  usuarioveiculo_id: string
+  placa: string
+  modelo: string
+}
+
+type MeResponse = {
+  realm: string
+  usuario_id: string
+}
 
 export default function ContainerVehicle() {
-    const [isPending, startTransition] = useTransition()
-    const [vehicles, setVehicles] = useState<any[]>([])
+    
+    const [vehicles, setVehicles] = useState<Vehicle[]>([])
     const fetchedRef = useRef(false)
 
     const GetVehicles = async () => {
         let toastId: string | null = null
 
         try {
+            toastId = toast.loading("Buscando veículos...")
 
-            if(!toastId){
+            const res = await fetch('/api/me')
 
-                toastId = toast.loading("Buscando veículos...")
+            const data: MeResponse = await res.json()
+
+            if (!res.ok) {
+                throw new Error('Erro ao buscar usuário')
             }
 
-            const res = await fetch('/api/me', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            })
+            const { realm, usuario_id } = data
 
-            const data = await res.json()
-            if (!res.ok) throw new Error(data.erro || 'Houve um erro ao informações do usuário, entre em contato com o suporte.')
-
-            const { realm, usuario_id } = data ?? {}
-
-            let userid: string = ""
+            let userid = ""
 
             if (!realm.includes("admin") && !realm.includes("gerente")) {
                 userid = usuario_id
@@ -38,31 +46,40 @@ export default function ContainerVehicle() {
 
             const vehiclesData = await getVehicles(userid)
 
-            if (!vehiclesData || vehiclesData.length === 0) {
+            if (!vehiclesData?.length) {
                 throw new Error("Nenhum veículo encontrado.")
             }
-
-            startTransition(() => {
-                setVehicles(vehiclesData)
-            })
-
-        } catch (error: any) {
-            toast.error(error.message || 'Ocorreu um erro inesperado.')
+            
+            const normalized: Vehicle[] = vehiclesData
+              .filter((v) => v.usuarioveiculo_id !== undefined)
+              .map((v) => ({
+                usuarioveiculo_id: String(v.usuarioveiculo_id),
+                placa: v.placa ?? "",
+                modelo: v.modelo ?? "",
+              }))
+            
+            setVehicles(normalized)
+        } catch (error) {
+            const err = error as Error
+            toast.error(err.message || 'Ocorreu um erro inesperado.')
         } finally {
             if (toastId) toast.dismiss(toastId)
         }
     }
 
     useEffect(() => {
-        if (fetchedRef.current) return;
-        fetchedRef.current = true;
+        if (fetchedRef.current) return
+        fetchedRef.current = true
         GetVehicles()
     }, [])
 
     return (
         <div>
-            {vehicles.map((veiculo: any) => (
-                <CardVehicle veiculo={veiculo} key={veiculo.usuarioveiculo_id} />
+            {vehicles.map((veiculo) => (
+                <CardVehicle 
+                  veiculo={veiculo} 
+                  key={veiculo.usuarioveiculo_id} 
+                />
             ))}
         </div>
     )

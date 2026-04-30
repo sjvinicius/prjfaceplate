@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image"
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -24,15 +25,10 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-  params
+  children
 }: Readonly<{
   children: React.ReactNode;
-  params?: { slug?: string[] };
 }>) {
-
-  const pathname = "/" + (params?.slug?.join("/") ?? "");
-  const asideWidth = pathname === "/" || pathname === "/login" ? "w-10" : "w-16";
 
   return (
     <html lang="en">
@@ -42,12 +38,39 @@ export default function RootLayout({
         style={{ background: "linear-gradient(121.61deg, #4292ED 0.55%, #ED4242 99.45%)" }}
       >
         <div className="flex-1 mr-10">
-          <img src="/leftbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", left: 0 }}></img>
-          <img src="/rightbg.svg" style={{ position: "absolute", zIndex: "-9999", height: "100vh", right: 0 }}></img>
+                    
+          <Image
+            src="/image.png"
+            alt="descricao"
+            width={500}
+            height={300}
+          />
+            <Image
+              src="/leftbg.svg"
+              alt="background esquerdo"
+              fill
+              style={{
+                objectFit: "contain",
+                objectPosition: "left",
+                zIndex: -1
+              }}
+              priority
+            />
+      
+            <Image
+              src="/rightbg.svg"
+              alt="background direito"
+              fill
+              style={{
+                objectFit: "contain",
+                objectPosition: "right",
+                zIndex: -1
+              }}
+            />
           {children}
         </div>
 
-        <div className={`asideright fixed right-0 top-0 h-screen ${asideWidth} flex flex-col`}>
+        <div className={`asideright fixed right-0 top-0 h-screen w-16 flex flex-col`}>
           <div className="clip-path-bottom bg-[var(--secondary)]" style={{ flex: "1.5" }}>
             <div className="aside-hover">Cinza</div>
           </div>

@@ -1,9 +1,6 @@
 'use client'
-import { useState } from "react"
 
 export default function ValidUser() {
-
-    const [isloading, SetIsLoading] = useState(false)
 
     return (
         <div className="flex flex-col items-center min-h-screen">
