@@ -45,11 +45,11 @@ export default function NewVehicle() {
                     throw new Error("Insira uma placa.");
                 }
 
-                const placaRegex = /^[A-Z]{3}\s?[0-9][0-9A-Z][0-9]{2}$/i;
+                // const placaRegex = /^[A-Z]{3}\s?[0-9][0-9A-Z][0-9]{2}$/i;
 
-                if (!placaRegex.test(placa.toUpperCase())) {
-                    throw new Error("Placa inválida. Formato esperado: ABC 1234 ou ABC 1D23");
-                }
+                // if (!placaRegex.test(placa.toUpperCase())) {
+                //     throw new Error("Placa inválida. Formato esperado: ABC 1234 ou ABC 1D23");
+                // }
 
                 const res = await fetch('/api/me', {
                     method: 'GET',
@@ -181,7 +181,8 @@ export default function NewVehicle() {
                     type="text"
                     maxLength={8}
                     value={placa}
-                    onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
+                    // onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
+                    onChange={(e) => setPlaca(e.target.value)}
                     className="mb-3 text-sm px-4 py-2 border rounded w-full"
                     required
                 />

@@ -70,6 +70,14 @@ export default function OnLoggedLayout({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isOpen]);
+    
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        } finally {
+            window.location.href = '/login';
+        }
+    };
 
     return (
         <div className="relative min-h-screen">
@@ -151,8 +159,9 @@ export default function OnLoggedLayout({
                         <button
                             className="text-sm px-4 py-2 cursor-pointer text-center justify-center rounded bg-[var(--tertiary)] text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50"
                         >
-                            <Link
-                                onClick={() => setIsOpen(false)} href="/login">Sair</Link>
+                            <button onClick={handleLogout}>
+                                Sair
+                            </button>
                         </button>
                     </div>
                 </div>

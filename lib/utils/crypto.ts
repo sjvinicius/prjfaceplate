@@ -14,7 +14,6 @@ export function encrypt(text: string) {
 
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
-    console.log(Buffer.from(SECRET, 'base64'))
 
     return iv.toString("hex") + ":" + encrypted.toString("hex");
 }
