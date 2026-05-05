@@ -1,6 +1,6 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
-import { DatabaseClient, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
+import { CreateVehicleDTO, DatabaseClient, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
 import bcrypt from "bcryptjs"
 
 const supabase = createClient(
@@ -13,23 +13,23 @@ const supabase = createClient(
     }
 );
 export type PendingVehicle = {
-  usuarioveiculo_id: number
-  marca: string
-  modelo: string
-  placa: string
-  status: string
-  usuario_id: {
-    usuario_id: number
-    nome: string
-    realm?: string
-    email?: string
-    dtnasc?: string
-    phone?: string
-    cpf?: string
-  }
+    usuarioveiculo_id: number
+    marca: string
+    modelo: string
+    placa: string
+    status: string
+    usuario_id: {
+        usuario_id: number
+        nome: string
+        realm?: string
+        email?: string
+        dtnasc?: string
+        phone?: string
+        cpf?: string
+    }
 }
 
-type RawVehicleRow = {
+export type RawVehicleRow = {
     usuarioveiculo_id: number
     marca: string
     modelo: string
@@ -43,10 +43,10 @@ type RawVehicleRow = {
         dtnasc?: string
         phone?: string
         cpf?: string
-    }
+    }[]
 }
 
-type RawUserValidationRow = {
+export type RawUserValidationRow = {
     usuario?: {
         usuario_id: number
         nome: string
@@ -57,7 +57,7 @@ type RawUserValidationRow = {
         cpf: string
         criacao_data: string
         status: string
-    }
+    }[]
 }
 
 type RawVehicle = {
@@ -69,7 +69,7 @@ type RawVehicle = {
     usuario?: {
         usuario_id: number
         nome: string
-    }
+    }[]
 }
 
 type VehicleLog = {
@@ -77,21 +77,16 @@ type VehicleLog = {
     criacao_data: string
 }
 
-type PendingVehicle = {
-  usuarioveiculo_id: number
-  marca: string
-  modelo: string
-  placa: string
-  status: string
-  usuario_id: {
+export type PendingUser = {
     usuario_id: number
     nome: string
-    realm?: string
-    email?: string
-    dtnasc?: string
-    phone?: string
-    cpf?: string
-  }
+    realm: string
+    email: string
+    dtnasc: string
+    phone: string
+    cpf: string
+    criacao_data: string
+    status: string
 }
 
 export const supabaseDb: DatabaseClient = {
@@ -122,7 +117,7 @@ export const supabaseDb: DatabaseClient = {
             cpf: String(row.cpf),
             dtnasc: String(row.dtnasc),
             password: String(row.password),
-            realm: String(row.realm),
+            realm: row.realm,
             status: String(row.status),
         };
     },
@@ -191,7 +186,7 @@ export const supabaseDb: DatabaseClient = {
 
         return data;
     },
-    GetPendingVehicle: async (): Promise<PendingVehicle[] | null> => {
+    GetPendingVehicle: async (): Promise<RawVehicleRow[] | null> => {
         const { data, error } = await supabase
             .from('usuarioveiculo')
             .select(`
@@ -217,31 +212,31 @@ export const supabaseDb: DatabaseClient = {
         if (!data || data.length === 0) return null;
 
         const rows = data as RawVehicleRow[]
-    
+
         return rows.map((row) => {
-            if (!row.usuario) {
-                throw new Error("Usuário não encontrado para veículo.");
-            }
-        
+            const usuario = row.usuario?.[0] ?? null;
+
             return {
                 usuarioveiculo_id: row.usuarioveiculo_id,
                 marca: row.marca,
                 modelo: row.modelo,
                 placa: row.placa,
                 status: row.status,
-                usuario_id: {
-                    usuario_id: row.usuario.usuario_id,
-                    nome: row.usuario.nome,
-                    realm: row.usuario.realm,
-                    email: row.usuario.email,
-                    dtnasc: row.usuario.dtnasc,
-                    phone: row.usuario.phone,
-                    cpf: row.usuario.cpf,
-                }
+                usuario_id: usuario
+                    ? {
+                        usuario_id: usuario.usuario_id,
+                        nome: usuario.nome,
+                        realm: usuario.realm,
+                        email: usuario.email,
+                        dtnasc: usuario.dtnasc,
+                        phone: usuario.phone,
+                        cpf: usuario.cpf,
+                    }
+                    : null
             }
-        })
+        });
     },
-    GetPendingUsers: async (): Promise<Partial<Usuario>[] | null> => {
+    GetPendingUsers: async (): Promise<PendingUser[] | null> => {
         const { data, error } = await supabase
             .from('filavalidacaousuario')
             .select(`
@@ -264,12 +259,13 @@ export const supabaseDb: DatabaseClient = {
 
         if (error) throw new Error(error.message);
         if (!data || data.length === 0) return null;
-    
+
         const rows = data as RawUserValidationRow[]
-    
+
         return rows
-            .filter((row) => row.usuario?.status === 'P')
-            .map((row) => row.usuario!)
+            .map((row) => row.usuario?.[0])
+            .filter((usuario): usuario is NonNullable<typeof usuario> => !!usuario)
+            .filter((usuario) => usuario.status === 'P')
     },
     SetUpdateVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null> => {
 
@@ -379,7 +375,7 @@ export const supabaseDb: DatabaseClient = {
 
         return { success: true }
     },
-    SetVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | { error: string }> => {
+    SetVehicle: async (veiculo: CreateVehicleDTO): Promise<Partial<Veiculo> | { error: string }> => {
 
         const usuarioId =
             typeof veiculo.usuario_id === "object"
@@ -418,47 +414,55 @@ export const supabaseDb: DatabaseClient = {
                     nome
                 )
             `)
-    
+
         if (usuario_id) {
             query = query.eq("usuario_id", usuario_id)
         }
-    
+
         const { data, error } = await query
         if (error) throw new Error(error.message)
         if (!data) return null
-    
+
         const veiculos = data as RawVehicle[]
-    
+
         const placas = veiculos.map(v => v.placa).filter(Boolean)
-    
+
         const { data: logs, error: logsError } = await supabase
             .from("logusuarioveiculo")
             .select("placa, criacao_data")
             .in("placa", placas)
-    
+
         if (logsError) throw new Error(logsError.message)
-    
+
         const logsByPlaca = new Map<string, VehicleLog>()
-    
+
         logs?.forEach((log: VehicleLog) => {
             const atual = logsByPlaca.get(log.placa)
-    
+
             if (!atual || new Date(log.criacao_data) > new Date(atual.criacao_data)) {
                 logsByPlaca.set(log.placa, log)
             }
         })
-    
-        return veiculos.map((row) => ({
-            usuarioveiculo_id: row.usuarioveiculo_id,
-            marca: row.marca,
-            modelo: row.modelo,
-            placa: row.placa,
-            status: row.status,
-            usuario_id: row.usuario,
-            logusuarioveiculo_id: {
-                criacao_data: logsByPlaca.get(row.placa)?.criacao_data ?? null,
+
+        return veiculos.map((row) => {
+            const usuario = row.usuario?.[0]
+
+            if (!usuario) {
+                throw new Error("Usuário não encontrado para veículo.");
             }
-        }))
+
+            return {
+                usuarioveiculo_id: row.usuarioveiculo_id,
+                marca: row.marca,
+                modelo: row.modelo,
+                placa: row.placa,
+                status: row.status,
+                usuario_id: usuario, // agora nunca undefined
+                logusuarioveiculo_id: {
+                    criacao_data: logsByPlaca.get(row.placa)?.criacao_data ?? undefined,
+                }
+            }
+        })
     },
     GetAllVehicles: async (): Promise<string[]> => {
         const { data, error } = await supabase
@@ -472,21 +476,22 @@ export const supabaseDb: DatabaseClient = {
             .map(v => v.placa)
             .filter(Boolean);
     },
-   GetLogVehicle: async (placa: string | number): Promise<VehicleLog[]> => {
+    GetLogVehicle: async (placa: string | number): Promise<VehicleLog[]> => {
         if (!placa) {
             throw new Error("Parâmetros insuficientes")
         }
-    
+
         const { data, error } = await supabase
             .from("logusuarioveiculo")
-            .select("status, criacao_data")
+            .select("status, criacao_data, placa")
             .eq("placa", placa)
-    
+
         if (error) throw new Error(error.message)
-    
+
         return (data ?? []).map((item) => ({
-            status: item.status ?? "A",
-            criacao_data: item.criacao_data ?? ""
+            placa: String(item.placa),
+            status: String(item.status),
+            criacao_data: String(item.criacao_data)
         }))
     }
 }

@@ -1,9 +1,10 @@
 "use server"
 import { revalidatePath } from "next/cache";
-import { LogUsuarioVeiculo, Veiculo } from "../database";
+import { LogUsuarioVeiculo, Veiculo, CreateVehicleDTO} from "../database";
 import { getDb } from "../db";
+import { RawVehicleRow } from "../supabaseCliente";
 
-export async function GetPendingVehicle(): Promise<PendingVehicle[] | null> {
+export async function GetPendingVehicle(): Promise<RawVehicleRow[] | null> {
 
     const db = await getDb();
     const user = await db.GetPendingVehicle()
@@ -42,7 +43,7 @@ export async function setLogVehicle(logusuarioveiculo: Partial<LogUsuarioVeiculo
     return vehicle
 }
 
-export async function setVehicle(veiculo: Partial<Veiculo>) {
+export async function setVehicle(veiculo: CreateVehicleDTO) {
     const db = await getDb();
     const vehicle = await db.SetVehicle(veiculo);
 

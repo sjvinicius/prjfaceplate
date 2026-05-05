@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { Usuario } from "../database";
 import { getDb } from "../db";
+import { PendingUser } from "../supabaseCliente";
 
 export async function GetUserByEmail(email: string): Promise<Partial<Usuario> | null> {
 
@@ -19,7 +20,7 @@ export async function SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> 
     return usersetted
 }
 
-export async function GetPendingUsers(): Promise<Partial<Usuario>[] | null> {
+export async function GetPendingUsers(): Promise<PendingUser[] | null> {
 
     const db = await getDb();
     const user = await db.GetPendingUsers()

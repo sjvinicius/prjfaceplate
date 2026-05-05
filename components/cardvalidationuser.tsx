@@ -1,11 +1,11 @@
 "use client"
 
-import { Usuario } from "@/lib/database";
 import { aprovarusuario, reprovarusuario } from "@/lib/repos/user";
+import { PendingUser } from "@/lib/supabaseCliente";
 import { useTransition } from "react"
 import toast from "react-hot-toast";
 
-export default function CardValidacaoUser({ usuario }: { usuario: Partial<Usuario> }) {
+export default function CardValidacaoUser({ usuario }: { usuario: PendingUser }) {
     const [isPending, startTransition] = useTransition()
 
     function handleAprovar(usuario_id: number | string) {

@@ -1,5 +1,6 @@
 'use client'
 
+import { CreateVehicleDTO } from "@/lib/database"
 import { setVehicle } from "@/lib/repos/vehicle"
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
@@ -13,15 +14,6 @@ const marcas = [
 
 type MeResponse = {
     usuario_id: number
-}
-
-type CreateVehicleDTO = {
-    usuario_id: number
-    marca: string
-    modelo: string
-    cor: string
-    placa: string
-    status: "P"
 }
 
 export default function NewVehicle() {
@@ -54,19 +46,11 @@ export default function NewVehicle() {
                     throw new Error("Insira uma placa.")
                 }
 
-<<<<<<< HEAD
-                // const placaRegex = /^[A-Z]{3}\s?[0-9][0-9A-Z][0-9]{2}$/i;
-
-                // if (!placaRegex.test(placa.toUpperCase())) {
-                //     throw new Error("Placa inválida. Formato esperado: ABC 1234 ou ABC 1D23");
-                // }
-=======
                 const placaRegex = /^[A-Z]{3}\s?[0-9][0-9A-Z][0-9]{2}$/i
 
                 if (!placaRegex.test(placa.toUpperCase())) {
                     throw new Error("Placa inválida.")
                 }
->>>>>>> 8d4d87725d2ad90b74120b6626401094e4c802e1
 
                 const res = await fetch('/api/me')
                 const data: MeResponse = await res.json()
@@ -141,28 +125,12 @@ export default function NewVehicle() {
                 <option value="preto">Preto</option>
             </select>
 
-<<<<<<< HEAD
-            <div className="flex-1 flex flex-col gap-1 min-w-[200px]">
-                <label className="text-sm" htmlFor="placa">Placa</label>
-                <input
-                    id="placa"
-                    type="text"
-                    maxLength={8}
-                    value={placa}
-                    // onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
-                    onChange={(e) => setPlaca(e.target.value)}
-                    className="mb-3 text-sm px-4 py-2 border rounded w-full"
-                    required
-                />
-            </div>
-=======
             <input
                 value={placa}
                 onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
                 placeholder="ABC 1234"
                 className="input"
             />
->>>>>>> 8d4d87725d2ad90b74120b6626401094e4c802e1
 
             <button
                 disabled={isPending}
