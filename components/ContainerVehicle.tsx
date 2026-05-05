@@ -1,10 +1,9 @@
 'use client'
 
 import { getVehicles } from "@/lib/repos/vehicle"
-import { useTransition, useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import toast from "react-hot-toast"
 import CardVehicle from "./cardvehicle"
-  import type { PendingVehicle } from "../lib/supabaseCliente"
 
 type Vehicle = {
   usuarioveiculo_id: string

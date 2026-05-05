@@ -28,7 +28,7 @@ export default function OnLoggedLayout({
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
                 });
-                                
+
                 const data: MeResponse = await res.json()
 
                 if (!res.ok) {
@@ -48,7 +48,6 @@ export default function OnLoggedLayout({
 
                 setRealm(realmArray);
                 setUser(data.nome);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err) {
                 if (err instanceof Error) {
                     toast.error(err.message, {
@@ -87,7 +86,7 @@ export default function OnLoggedLayout({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isOpen]);
-    
+
     const handleLogout = async () => {
         try {
             await fetch('/api/logout', { method: 'POST' });
@@ -160,32 +159,28 @@ export default function OnLoggedLayout({
                             Meus veículos
                         </Link>
                         {["admin", "gerente"].some(r => realm.includes(r)) && (
-                        <>
-                            <Link
-                                onClick={() => setIsOpen(false)}
-                                href="/validvehicle"
-                                className="px-4 py-2 hover:bg-white/20 rounded capitalize"
-                            >
-                                Validar veículo
-                            </Link>
-                    
-                            <Link
-                                onClick={() => setIsOpen(false)}
-                                href="/validuser"
-                                className="px-4 py-2 hover:bg-white/20 rounded capitalize"
-                            >
-                                Validar Usuários
-                            </Link>
-                        </>
-                    )}
+                            <>
+                                <Link
+                                    onClick={() => setIsOpen(false)}
+                                    href="/validvehicle"
+                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                                >
+                                    Validar veículo
+                                </Link>
+
+                                <Link
+                                    onClick={() => setIsOpen(false)}
+                                    href="/validuser"
+                                    className="px-4 py-2 hover:bg-white/20 rounded capitalize"
+                                >
+                                    Validar Usuários
+                                </Link>
+                            </>
+                        )}
                     </nav>
                     <div className="mt-auto flex justify-center items-center my-6">
-                        <button
-                            className="text-sm px-4 py-2 cursor-pointer text-center justify-center rounded bg-[var(--tertiary)] text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50"
-                        >
-                            <button onClick={handleLogout}>
-                                Sair
-                            </button>
+                        <button className="text-sm px-4 py-2 cursor-pointer text-center justify-center rounded bg-[var(--tertiary)] text-white hover:opacity-80 flex items-center gap-2 disabled:opacity-50" onClick={handleLogout}>
+                            Sair
                         </button>
                     </div>
                 </div>
