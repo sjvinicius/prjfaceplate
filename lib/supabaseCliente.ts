@@ -66,7 +66,7 @@ type RawVehicle = {
     modelo: string
     placa: string
     status: string
-    usuario?: {
+    usuario: {
         usuario_id: number
         nome: string
     }[]
@@ -443,9 +443,16 @@ export const supabaseDb: DatabaseClient = {
                 logsByPlaca.set(log.placa, log)
             }
         })
+        console.log(veiculos)
 
         return veiculos.map((row) => {
-            const usuario = row.usuario?.[0]
+            const usuario = Array.isArray(row.usuario)
+                ? row.usuario[0]
+                : row.usuario
+
+            if (!usuario) {
+                throw new Error("Usuário não encontrado para veículo.");
+            }
 
             if (!usuario) {
                 throw new Error("Usuário não encontrado para veículo.");
@@ -457,7 +464,7 @@ export const supabaseDb: DatabaseClient = {
                 modelo: row.modelo,
                 placa: row.placa,
                 status: row.status,
-                usuario_id: usuario, // agora nunca undefined
+                usuario_id: usuario,
                 logusuarioveiculo_id: {
                     criacao_data: logsByPlaca.get(row.placa)?.criacao_data ?? undefined,
                 }

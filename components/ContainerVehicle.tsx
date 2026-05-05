@@ -28,7 +28,6 @@ export default function ContainerVehicle() {
             toastId = toast.loading("Buscando veículos...")
 
             const res = await fetch('/api/me')
-
             const data: MeResponse = await res.json()
 
             if (!res.ok) {
@@ -55,6 +54,7 @@ export default function ContainerVehicle() {
                 usuarioveiculo_id: String(v.usuarioveiculo_id),
                 placa: v.placa ?? "",
                 modelo: v.modelo ?? "",
+                marca: v.marca ?? "",
               }))
             
             setVehicles(normalized)

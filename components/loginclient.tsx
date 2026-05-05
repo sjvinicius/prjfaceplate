@@ -65,7 +65,6 @@ export default function LoginClient({
 
       const redirectTo = redirect || "/vehicles";
 
-      // ✅ navegação sem reload
       router.push(redirectTo);
 
     } catch (err) {

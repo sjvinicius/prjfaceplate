@@ -7,19 +7,19 @@ import toast from "react-hot-toast"
 import Image from "next/image"
 
 type VehicleLog = {
-  status: "A" | "R" | string
-  criacao_data: string
+    status: "A" | "R" | string
+    criacao_data: string
 }
 
 type Vehicle = {
-  usuarioveiculo_id: number | string
-  placa: string
-  modelo?: string
-  marca?: string
-  status?: "A" | "R" | string
-  logusuarioveiculo_id?: {
-    criacao_data?: string
-  }
+    usuarioveiculo_id: number | string
+    placa: string
+    modelo?: string
+    marca?: string
+    status?: "A" | "R" | string
+    logusuarioveiculo_id?: {
+        criacao_data?: string
+    }
 }
 
 export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
@@ -28,6 +28,7 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
     const [showModal, setShowModal] = useState(false)
     const [logs, setLogs] = useState<VehicleLog[]>([])
     const [loadingLogs, setLoadingLogs] = useState(false)
+    console.log(veiculo)
 
     const handleOpenModal = () => {
         setShowModal(true)
@@ -42,12 +43,12 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
                     throw new Error("Placa inválida.")
                 }
                 const reslogs = await getLogVehicle(veiculo.placa)
-                
+
                 setLogs(
-                  (reslogs ?? []).map((l) => ({
-                    status: l.status ?? "A",
-                    criacao_data: l.criacao_data ?? new Date().toISOString()
-                  }))
+                    (reslogs ?? []).map((l) => ({
+                        status: l.status ?? "A",
+                        criacao_data: l.criacao_data ?? new Date().toISOString()
+                    }))
                 )
             } catch (err) {
                 if (err instanceof Error) {
@@ -65,7 +66,7 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
     return (
         <>
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 rounded border border-[var(--primary)] py-4 px-4 sm:px-6 md:px-10 mb-5">
-                
+
                 <div className={
                     veiculo.status === 'A'
                         ? "rounded-full bg-green-500 w-5 h-5"
@@ -76,11 +77,12 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
 
                 <div className="flex-1 w-full flex justify-center md:justify-start">
                     <Image
-                        src={`/${veiculo.marca?.toLowerCase() || "default"}.png`}
+                        src={`/${veiculo.marca?.toLowerCase() || "bmw"}.png`}
                         alt="logo do veículo"
                         width={80}
                         height={80}
                         className="object-contain"
+                        unoptimized
                     />
                 </div>
 
@@ -119,7 +121,7 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
 
             {showModal && (
                 <div className="fixed inset-0 flex justify-center items-center z-50">
-                    
+
                     <div className="absolute inset-0 bg-black opacity-30" onClick={() => setShowModal(false)} />
 
                     <div className="relative bg-white rounded-lg p-6 w-[600px] max-h-[80vh]">

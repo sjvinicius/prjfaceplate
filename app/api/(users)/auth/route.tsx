@@ -38,10 +38,12 @@ export async function POST(req: NextRequest) {
     response.cookies.set('nextauthprjfaceplate-token', token, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: 'strict',
+        sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 4, // 4 horas
     });
+
+    console.log("Salvou cookies")
 
     return response;
 }
