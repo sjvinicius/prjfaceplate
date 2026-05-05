@@ -89,6 +89,18 @@ export type PendingUser = {
     status: string
 }
 
+export type PendingVehicleNormalized = {
+  usuarioveiculo_id: number
+  marca: string
+  modelo: string
+  placa: string
+  status: string
+  usuario_id: {
+    usuario_id: number
+    nome: string
+  }
+}
+
 export const supabaseDb: DatabaseClient = {
 
     GetUserByEmail: async (email: string): Promise<Usuario | null> => {
@@ -186,7 +198,7 @@ export const supabaseDb: DatabaseClient = {
 
         return data;
     },
-    GetPendingVehicle: async (): Promise<RawVehicleRow[] | null> => {
+    GetPendingVehicle: async (): Promise<PendingVehicleNormalized[] | null> => {
         const { data, error } = await supabase
             .from('usuarioveiculo')
             .select(`
@@ -214,7 +226,14 @@ export const supabaseDb: DatabaseClient = {
         const rows = data as RawVehicleRow[]
 
         return rows.map((row) => {
-            const usuario = row.usuario?.[0] ?? null;
+            // const usuario = row.usuario?.[0] ?? null;
+            const usuario = Array.isArray(row.usuario)
+                ? row.usuario[0]
+                : row.usuario
+
+            if (!usuario) {
+                throw new Error("Usuário não encontrado para veículo.");
+            }
 
             return {
                 usuarioveiculo_id: row.usuarioveiculo_id,
@@ -223,16 +242,6 @@ export const supabaseDb: DatabaseClient = {
                 placa: row.placa,
                 status: row.status,
                 usuario_id: usuario
-                    ? {
-                        usuario_id: usuario.usuario_id,
-                        nome: usuario.nome,
-                        realm: usuario.realm,
-                        email: usuario.email,
-                        dtnasc: usuario.dtnasc,
-                        phone: usuario.phone,
-                        cpf: usuario.cpf,
-                    }
-                    : null
             }
         });
     },
@@ -443,16 +452,11 @@ export const supabaseDb: DatabaseClient = {
                 logsByPlaca.set(log.placa, log)
             }
         })
-        console.log(veiculos)
 
         return veiculos.map((row) => {
             const usuario = Array.isArray(row.usuario)
                 ? row.usuario[0]
                 : row.usuario
-
-            if (!usuario) {
-                throw new Error("Usuário não encontrado para veículo.");
-            }
 
             if (!usuario) {
                 throw new Error("Usuário não encontrado para veículo.");

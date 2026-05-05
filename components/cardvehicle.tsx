@@ -28,7 +28,6 @@ export default function CardVehicle({ veiculo }: { veiculo: Vehicle }) {
     const [showModal, setShowModal] = useState(false)
     const [logs, setLogs] = useState<VehicleLog[]>([])
     const [loadingLogs, setLoadingLogs] = useState(false)
-    console.log(veiculo)
 
     const handleOpenModal = () => {
         setShowModal(true)

@@ -1,4 +1,4 @@
-import { PendingUser, RawVehicleRow } from "./supabaseCliente";
+import { PendingUser, PendingVehicleNormalized, RawVehicleRow } from "./supabaseCliente";
 
 export interface Usuario {
     usuario_id?: number | string;
@@ -55,7 +55,7 @@ export type CreateVehicleDTO = {
 export interface DatabaseClient {
     GetUserByEmail(email: string): Promise<Partial<Usuario> | null>;
     SetUser(user: Partial<Usuario>): Promise<Partial<Usuario> | null>;
-    GetPendingVehicle(): Promise<RawVehicleRow[] | null>;
+    GetPendingVehicle(): Promise<PendingVehicleNormalized[] | null>;
     GetPendingUsers(): Promise<PendingUser[] | null>;
     SetUpdateVehicle(veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null>;
     SetUpdateUser(usuario: Partial<Usuario>): Promise<Partial<Usuario> | null>;

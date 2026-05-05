@@ -3,9 +3,9 @@
 import { aprovarVeiculo, reprovarVeiculo } from "@/lib/repos/vehicle"
 import { useTransition } from "react"
 import toast from "react-hot-toast"
-import type { RawVehicleRow } from "@/lib/supabaseCliente"
+import type { PendingVehicleNormalized } from "@/lib/supabaseCliente"
 
-export default function CardValidacao({ veiculo }: { veiculo: RawVehicleRow }) {
+export default function CardValidacao({ veiculo }: { veiculo: PendingVehicleNormalized }) {
     const [isPending, startTransition] = useTransition()
 
     function handleAprovar(usuarioveiculo_id: number | string) {
@@ -40,7 +40,7 @@ export default function CardValidacao({ veiculo }: { veiculo: RawVehicleRow }) {
 
     return (
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 rounded border border-[var(--primary)] py-4 px-4 sm:px-6 md:px-10">
-            
+
             <div className="flex-1 w-full">
                 <label className="block w-full border-b-[3px] border-[var(--primary)] mb-1">
                     Placa
@@ -53,7 +53,7 @@ export default function CardValidacao({ veiculo }: { veiculo: RawVehicleRow }) {
                     Usuário Solicitante
                 </label>
                 <h4 className="text-lg md:text-xl">
-                    {veiculo.usuario?.[0]?.nome?.split(" ").slice(0, 3).join(" ")}
+                    {veiculo.usuario_id?.nome?.split(" ").slice(0, 3).join(" ")}
                 </h4>
             </div>
 

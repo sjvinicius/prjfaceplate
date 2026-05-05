@@ -2,9 +2,9 @@
 import { revalidatePath } from "next/cache";
 import { LogUsuarioVeiculo, Veiculo, CreateVehicleDTO} from "../database";
 import { getDb } from "../db";
-import { RawVehicleRow } from "../supabaseCliente";
+import { PendingVehicleNormalized} from "../supabaseCliente";
 
-export async function GetPendingVehicle(): Promise<RawVehicleRow[] | null> {
+export async function GetPendingVehicle(): Promise<PendingVehicleNormalized[] | null> {
 
     const db = await getDb();
     const user = await db.GetPendingVehicle()

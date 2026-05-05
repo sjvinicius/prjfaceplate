@@ -43,7 +43,5 @@ export async function POST(req: NextRequest) {
         maxAge: 60 * 60 * 4, // 4 horas
     });
 
-    console.log("Salvou cookies")
-
     return response;
 }
