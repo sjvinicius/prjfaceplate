@@ -90,15 +90,15 @@ export type PendingUser = {
 }
 
 export type PendingVehicleNormalized = {
-  usuarioveiculo_id: number
-  marca: string
-  modelo: string
-  placa: string
-  status: string
-  usuario_id: {
-    usuario_id: number
-    nome: string
-  }
+    usuarioveiculo_id: number
+    marca: string
+    modelo: string
+    placa: string
+    status: string
+    usuario_id: {
+        usuario_id: number
+        nome: string
+    }
 }
 
 export const supabaseDb: DatabaseClient = {
@@ -251,7 +251,7 @@ export const supabaseDb: DatabaseClient = {
             .select(`
                 filavalidacaousuario_id,
                 status,
-                usuario:usuario_id (
+                usuario:usuario_id!inner(
                     usuario_id,
                     nome,
                     realm,
@@ -271,9 +271,16 @@ export const supabaseDb: DatabaseClient = {
 
         const rows = data as RawUserValidationRow[]
 
+        console.log(rows)
         return rows
-            .map((row) => row.usuario?.[0])
-            .filter((usuario): usuario is NonNullable<typeof usuario> => !!usuario)
+            .map((row) => {
+                const usuario = Array.isArray(row.usuario)
+                    ? row.usuario[0]
+                    : row.usuario
+
+                return usuario
+            })
+            .filter((usuario): usuario is PendingUser => !!usuario)
             .filter((usuario) => usuario.status === 'P')
     },
     SetUpdateVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null> => {
