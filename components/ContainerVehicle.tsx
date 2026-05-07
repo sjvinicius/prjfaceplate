@@ -55,6 +55,7 @@ export default function ContainerVehicle() {
                 placa: v.placa ?? "",
                 modelo: v.modelo ?? "",
                 marca: v.marca ?? "",
+                status: v.status ?? "",
               }))
             
             setVehicles(normalized)

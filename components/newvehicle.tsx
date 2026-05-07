@@ -109,36 +109,94 @@ export default function NewVehicle() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row flex-wrap gap-5">
-            
-            <select value={brand} onChange={(e) => setBrand(e.target.value)} className="input">
-                {marcas.map((marca) => (
-                    <option key={marca}>{marca}</option>
-                ))}
-            </select>
+        <div className="w-full bg-white rounded-2xl border border-gray-200 p-6 shadow-sm flex flex-col justify-between">
+        
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            <input value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Modelo" className="input" />
+                {/* Marca */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                        Marca
+                    </label>
 
-            <select value={cor} onChange={(e) => setCor(e.target.value)} className="input">
-                <option value="">Selecione</option>
-                <option value="branco">Branco</option>
-                <option value="preto">Preto</option>
-            </select>
+                    <select
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
+                        className="border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition"
+                    >
+                        {marcas.map((marca) => (
+                            <option key={marca}>
+                                {marca}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-            <input
-                value={placa}
-                onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
-                placeholder="ABC 1234"
-                className="input"
-            />
+                {/* Modelo */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                        Modelo
+                    </label>
 
-            <button
-                disabled={isPending}
-                onClick={handleRegister}
-                className="px-4 py-2 bg-[var(--primary)] text-white rounded"
-            >
-                Cadastrar
-            </button>
+                    <input
+                        value={modelo}
+                        onChange={(e) => setModelo(e.target.value)}
+                        placeholder="Ex: Civic"
+                        className="border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition"
+                    />
+                </div>
+
+                {/* Cor */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                        Cor
+                    </label>
+
+                    <select
+                        value={cor}
+                        onChange={(e) => setCor(e.target.value)}
+                        className="border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition"
+                    >
+                        <option value="">Selecione</option>
+                        <option value="branco">Branco</option>
+                        <option value="preto">Preto</option>
+                    </select>
+                </div>
+
+                {/* Placa */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                        Placa
+                    </label>
+
+                    <input
+                        value={placa}
+                        onChange={(e) => setPlaca(formatarPlacaInput(e.target.value))}
+                        placeholder="ABC 1234"
+                        className="border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition uppercase"
+                    />
+                </div>
+            </div>
+
+            <div className="flex justify-center mt-6">
+                <button
+                    type="submit"
+                    disabled={isPending}
+                    onClick={handleRegister}
+                    className="
+                        w-full max-w-sm
+                        bg-blue-600 hover:bg-blue-700
+                        text-white font-semibold
+                        py-3 px-6
+                        rounded-xl
+                        transition-all duration-200
+                        shadow-md hover:shadow-lg
+                        disabled:opacity-50 disabled:cursor-not-allowed
+                    "
+                >
+                    {isPending ? 'Salvando...' : 'Cadastrar Veículo'}
+                </button>
+            </div>
         </div>
     )
 }

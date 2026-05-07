@@ -150,10 +150,10 @@ export default function OnLoggedLayout({
                         </div>
 
 
-                        <Link
+                        {/* <Link
                             onClick={() => setIsOpen(false)} href="/mypage" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
                             Minhas informações
-                        </Link>
+                        </Link> */}
                         <Link
                             onClick={() => setIsOpen(false)} href="/vehicles" className="px-4 py-2 hover:bg-white/20 rounded capitalize">
                             Meus veículos
