@@ -5,6 +5,7 @@ import { GetPendingVehicle } from "@/lib/repos/vehicle"
 
 export default async function ValidVehicle() {
     const veiculos = await GetPendingVehicle()
+    console.log(veiculos)
 
     return (
         <div className="flex flex-col items-center min-h-screen">
