@@ -1,6 +1,6 @@
 // lib/supabaseClient.ts
 import { createClient } from '@supabase/supabase-js';
-import { CreateVehicleDTO, DatabaseClient, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
+import { CreateVehicleDTO, DatabaseClient, FilaEmbeddingFaceRecog, LogUsuarioVeiculo, Usuario, Veiculo } from './database';
 import bcrypt from "bcryptjs"
 
 const supabase = createClient(
@@ -12,6 +12,9 @@ const supabase = createClient(
         }
     }
 );
+
+export {supabase}
+
 export type PendingVehicle = {
     usuarioveiculo_id: number
     marca: string
@@ -102,7 +105,6 @@ export type PendingVehicleNormalized = {
 }
 
 export const supabaseDb: DatabaseClient = {
-
     GetUserByEmail: async (email: string): Promise<Usuario | null> => {
 
         if (!email) {
@@ -142,7 +144,7 @@ export const supabaseDb: DatabaseClient = {
 
         if (user.nome.trim().split(" ").length <= 1) {
 
-            throw new Error("Nome completo inválido.")
+            throw new Error("Nome completo inválido.");
         }
 
         if (!user.email.trim().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
@@ -182,7 +184,7 @@ export const supabaseDb: DatabaseClient = {
             .select()
             .single();
 
-        if (error) throw new Error("Houve um erro ao criar usuário.")
+        if (error) throw new Error("Houve um erro ao criar usuário.");
 
         const { error: errorvalid } = await supabase
             .from("filavalidacaousuario")
@@ -192,9 +194,9 @@ export const supabaseDb: DatabaseClient = {
                 criacao_data: now,
                 alteracao_token: "sistema",
                 alteracao_data: now,
-            })
+            });
 
-        if (errorvalid) throw new Error("Houve um erro ao inserir para validação.")
+        if (errorvalid) throw new Error("Houve um erro ao inserir para validação.");
 
         return data;
     },
@@ -223,13 +225,13 @@ export const supabaseDb: DatabaseClient = {
 
         if (!data || data.length === 0) return null;
 
-        const rows = data as RawVehicleRow[]
+        const rows = data as RawVehicleRow[];
 
         return rows.map((row) => {
             // const usuario = row.usuario?.[0] ?? null;
             const usuario = Array.isArray(row.usuario)
                 ? row.usuario[0]
-                : row.usuario
+                : row.usuario;
 
             if (!usuario) {
                 throw new Error("Usuário não encontrado para veículo.");
@@ -242,7 +244,7 @@ export const supabaseDb: DatabaseClient = {
                 placa: row.placa,
                 status: row.status,
                 usuario_id: usuario
-            }
+            };
         });
     },
     GetPendingUsers: async (): Promise<PendingUser[] | null> => {
@@ -269,25 +271,25 @@ export const supabaseDb: DatabaseClient = {
         if (error) throw new Error(error.message);
         if (!data || data.length === 0) return null;
 
-        const rows = data as RawUserValidationRow[]
+        const rows = data as RawUserValidationRow[];
 
-        console.log(rows)
+        console.log(rows);
         return rows
             .map((row) => {
                 const usuario = Array.isArray(row.usuario)
                     ? row.usuario[0]
-                    : row.usuario
+                    : row.usuario;
 
-                return usuario
+                return usuario;
             })
             .filter((usuario): usuario is PendingUser => !!usuario)
-            .filter((usuario) => usuario.status === 'P')
+            .filter((usuario) => usuario.status === 'P');
     },
     SetUpdateVehicle: async (veiculo: Partial<Veiculo>): Promise<Partial<Veiculo> | null> => {
 
         if (!veiculo.usuarioveiculo_id) {
 
-            throw new Error("Parâmetros insuficientes.")
+            throw new Error("Parâmetros insuficientes.");
         }
 
         const { ...updateFields } = veiculo;
@@ -319,7 +321,7 @@ export const supabaseDb: DatabaseClient = {
 
         if (!usuario.usuario_id) {
 
-            throw new Error("Parâmetros insuficientes.")
+            throw new Error("Parâmetros insuficientes.");
         }
 
         const { ...updateFields } = usuario;
@@ -347,7 +349,7 @@ export const supabaseDb: DatabaseClient = {
 
         return data;
     },
-    isValidVehicle: async (veiculo: Partial<Veiculo>): Promise<{ success: boolean }> => {
+    isValidVehicle: async (veiculo: Partial<Veiculo>): Promise<{ success: boolean; }> => {
         if (!veiculo.placa) {
             throw new Error("Parâmetro 'placa' é obrigatório.");
         }
@@ -376,7 +378,7 @@ export const supabaseDb: DatabaseClient = {
 
         return { success: true };
     },
-    SetLogVehicle: async (logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean }> => {
+    SetLogVehicle: async (logusuarioveiculo: Partial<LogUsuarioVeiculo>): Promise<{ success: boolean; }> => {
 
         if (!logusuarioveiculo.placa) {
 
@@ -385,18 +387,17 @@ export const supabaseDb: DatabaseClient = {
 
         const { error } = await supabase
             .from('logusuarioveiculo')
-            .insert(logusuarioveiculo)
+            .insert(logusuarioveiculo);
 
         if (error) throw new Error(error.message);
 
-        return { success: true }
+        return { success: true };
     },
-    SetVehicle: async (veiculo: CreateVehicleDTO): Promise<Partial<Veiculo> | { error: string }> => {
+    SetVehicle: async (veiculo: CreateVehicleDTO): Promise<Partial<Veiculo> | { error: string; }> => {
 
-        const usuarioId =
-            typeof veiculo.usuario_id === "object"
-                ? veiculo.usuario_id?.usuario_id
-                : veiculo.usuario_id;
+        const usuarioId = typeof veiculo.usuario_id === "object"
+            ? veiculo.usuario_id?.usuario_id
+            : veiculo.usuario_id;
 
         if (!usuarioId || !veiculo.marca || !veiculo.modelo || !veiculo.cor || !veiculo.placa) {
             throw new Error("Parâmetros insuficientes.");
@@ -429,41 +430,41 @@ export const supabaseDb: DatabaseClient = {
                     usuario_id,
                     nome
                 )
-            `)
+            `);
 
         if (usuario_id) {
-            query = query.eq("usuario_id", usuario_id)
+            query = query.eq("usuario_id", usuario_id);
         }
 
-        const { data, error } = await query
-        if (error) throw new Error(error.message)
-        if (!data) return null
+        const { data, error } = await query;
+        if (error) throw new Error(error.message);
+        if (!data) return null;
 
-        const veiculos = data as RawVehicle[]
+        const veiculos = data as RawVehicle[];
 
-        const placas = veiculos.map(v => v.placa).filter(Boolean)
+        const placas = veiculos.map(v => v.placa).filter(Boolean);
 
         const { data: logs, error: logsError } = await supabase
             .from("logusuarioveiculo")
             .select("placa, criacao_data")
-            .in("placa", placas)
+            .in("placa", placas);
 
-        if (logsError) throw new Error(logsError.message)
+        if (logsError) throw new Error(logsError.message);
 
-        const logsByPlaca = new Map<string, VehicleLog>()
+        const logsByPlaca = new Map<string, VehicleLog>();
 
         logs?.forEach((log: VehicleLog) => {
-            const atual = logsByPlaca.get(log.placa)
+            const atual = logsByPlaca.get(log.placa);
 
             if (!atual || new Date(log.criacao_data) > new Date(atual.criacao_data)) {
-                logsByPlaca.set(log.placa, log)
+                logsByPlaca.set(log.placa, log);
             }
-        })
+        });
 
         return veiculos.map((row) => {
             const usuario = Array.isArray(row.usuario)
                 ? row.usuario[0]
-                : row.usuario
+                : row.usuario;
 
             if (!usuario) {
                 throw new Error("Usuário não encontrado para veículo.");
@@ -479,8 +480,8 @@ export const supabaseDb: DatabaseClient = {
                 logusuarioveiculo_id: {
                     criacao_data: logsByPlaca.get(row.placa)?.criacao_data ?? undefined,
                 }
-            }
-        })
+            };
+        });
     },
     GetAllVehicles: async (): Promise<string[]> => {
         const { data, error } = await supabase
@@ -496,20 +497,55 @@ export const supabaseDb: DatabaseClient = {
     },
     GetLogVehicle: async (placa: string | number): Promise<VehicleLog[]> => {
         if (!placa) {
-            throw new Error("Parâmetros insuficientes")
+            throw new Error("Parâmetros insuficientes");
         }
 
         const { data, error } = await supabase
             .from("logusuarioveiculo")
             .select("status, criacao_data, placa")
-            .eq("placa", placa)
+            .eq("placa", placa);
 
-        if (error) throw new Error(error.message)
+        if (error) throw new Error(error.message);
 
         return (data ?? []).map((item) => ({
             placa: String(item.placa),
             status: String(item.status),
             criacao_data: String(item.criacao_data)
-        }))
+        }));
+    },
+    SetFilaEmbeddingFaceRecog: async (data: Partial<FilaEmbeddingFaceRecog>): Promise<FilaEmbeddingFaceRecog | null> => {
+
+        if (!data.usuario_id ||
+            !data.image_url) {
+            throw new Error("Parâmetros insuficientes.");
+        }
+
+        const now = new Date().toISOString();
+
+        const { data: inserted, error } = await supabase
+            .from("filaembeddingfacerecog")
+            .insert({
+                usuario_id: data.usuario_id,
+                image_url: data.image_url,
+                storage_path: data.storage_path,
+                status: "P",
+                criacao_data: now,
+                alteracao_data: now,
+                criacao_token: now,
+                alteracao_token: now
+
+            })
+            .select()
+            .single();
+
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return inserted;
+    },
+    GetPendingFaceEmbeddings: function (): Promise<FilaEmbeddingFaceRecog[] | null> {
+        throw new Error('Function not implemented.');
     }
 }
+

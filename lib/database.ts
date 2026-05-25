@@ -51,6 +51,17 @@ export type CreateVehicleDTO = {
     status: string
 }
 
+export interface FilaEmbeddingFaceRecog {
+    filaembeddingfacerecog_id?: number
+    usuario_id: number
+    image_url: string
+    storage_path: string
+    status?: string
+    criacao_data?: string
+    criacao_token?: string
+    alteracao_data?: string
+    alteracao_token?: string
+}
 
 export interface DatabaseClient {
     GetUserByEmail(email: string): Promise<Partial<Usuario> | null>;
@@ -65,4 +76,6 @@ export interface DatabaseClient {
     GetVehicles(usuario_id: string | number): Promise<Partial<Veiculo>[] | null>;
     GetAllVehicles(): Promise<string[]>;
     GetLogVehicle(placa: string | number): Promise<Partial<LogUsuarioVeiculo>[] | null>;
+    SetFilaEmbeddingFaceRecog(data: Partial<FilaEmbeddingFaceRecog>): Promise<Partial<FilaEmbeddingFaceRecog> | null>
+    GetPendingFaceEmbeddings(): Promise<FilaEmbeddingFaceRecog[] | null>
 }
