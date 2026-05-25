@@ -43,7 +43,7 @@ export async function uploadFaceImages(
             `${labels[i]}-${Date.now()}.${extension}`
 
         const path =
-            `faces/${userId}/${fileName}`
+            `${userId}/${fileName}`
 
         const { error } = await supabase.storage
             .from("faces")

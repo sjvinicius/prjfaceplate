@@ -159,7 +159,11 @@ export default function LoginClient({
           <p className="text-xs">
             Não possui uma conta?{" "}
             <strong>
-              <Link href="/signin">Cadastre-se</Link>
+              <Link href="/signin"
+                className="ml-1 text-[var(--primary)] font-semibold hover:underline"
+              >
+                Cadastre-se
+              </Link>
             </strong>
           </p>
         </div>
