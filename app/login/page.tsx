@@ -1,14 +1,19 @@
 import LoginClient from "@/components/loginclient";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams: { expired?: string; redirect?: string };
+  searchParams: Promise<{
+    expired?: string;
+    redirect?: string;
+  }>;
 }) {
+  const params = await searchParams;
+
   return (
     <LoginClient
-      expired={searchParams.expired}
-      redirect={searchParams.redirect}
+      expired={params.expired}
+      redirect={params.redirect}
     />
   );
 }

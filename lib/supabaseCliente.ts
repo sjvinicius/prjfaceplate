@@ -117,6 +117,8 @@ export const supabaseDb: DatabaseClient = {
             .select('usuario_id, nome, email, phone, cpf, dtnasc, password, realm, status')
             .eq('email', email);
 
+            console.log("error:", error);
+            console.log("data:", data);
         if (error) throw new Error(error.message);
 
         const row = data[0];

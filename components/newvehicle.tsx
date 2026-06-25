@@ -81,7 +81,10 @@ export default function NewVehicle() {
                 setCor("")
                 setPlaca("")
 
-                router.refresh()
+                setTimeout(() => {
+                    
+                    window.location.reload()
+                }, 500);
 
             } catch (err) {
                 if (err instanceof Error) {
@@ -158,8 +161,14 @@ export default function NewVehicle() {
                         className="border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition"
                     >
                         <option value="">Selecione</option>
+                        <option value="azul">Azul</option>
                         <option value="branco">Branco</option>
+                        <option value="prata">Prata</option>
                         <option value="preto">Preto</option>
+                        <option value="verde">Verde</option>
+                        <option value="marrom">Marrom</option>
+                        <option value="vermelho">Vermelho</option>
+                        <option value="outro">Outro/Fantasia</option>
                     </select>
                 </div>
 
